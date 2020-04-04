@@ -1,11 +1,9 @@
 package demo;
 
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
 public class ActionController {
 	
 	@RequestMapping(path = "/acs/actions",
@@ -17,7 +15,7 @@ public class ActionController {
 		return user;
 	}
 	
-	// DELETE - delete content (SQL: delete)
+		// DELETE - delete content (SQL: delete)
 	@RequestMapping(path = "/acs/admin/users/{adminEmail}",
 			method = RequestMethod.DELETE)
 	public void deleteAllUsers (@PathVariable("adminEmail") String adminEmail) {
@@ -40,7 +38,7 @@ public class ActionController {
 					// TODO delete all deleteAllUsers from database
 				}
 				
-				@RequestMapping(path = "/acs/admin/users/{adminEmail}",
+				@RequestMapping(path ="/acs/admin/users/{adminEmail}",
 						method = RequestMethod.GET,
 						produces = MediaType.APPLICATION_JSON_VALUE)
 				public UserBoundary[] exportAllUsers (@PathVariable("adminEmail") String userEmail) {
