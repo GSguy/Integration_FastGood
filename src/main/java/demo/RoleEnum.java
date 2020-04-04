@@ -1,7 +1,7 @@
 package demo;
 
 public enum RoleEnum {
-PLAYER,
-MANAGER,
-ADMIN
+	PLAYER,
+	MANAGER,
+	ADMIN
 }
