@@ -14,7 +14,7 @@ public class UserController {
 			return new UserBoundary (userEmail);
 		}
 		
-		@RequestMapping(path = "/acs/users",
+		@RequestMapping(path = "users/{userName}",
 				method = RequestMethod.POST,
 				produces = MediaType.APPLICATION_JSON_VALUE,
 				consumes=MediaType.APPLICATION_JSON_VALUE)
@@ -25,7 +25,7 @@ public class UserController {
 
 
 		// PUT - update content (SQL: update)
-		@RequestMapping(path = "/users/{userEmail}",
+		@RequestMapping(path = "users/{userEmail}",
 				method = RequestMethod.PUT,
 				consumes = MediaType.APPLICATION_JSON_VALUE)
 		public void update (
