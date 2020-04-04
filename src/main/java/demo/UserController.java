@@ -14,7 +14,8 @@ public class UserController {
 			return new UserBoundary (userEmail);
 		}
 		
-		@RequestMapping(path = "users/{userName}",
+		@RequestMapping(path = "/acs/users/{userName}",
+
 				method = RequestMethod.POST,
 				produces = MediaType.APPLICATION_JSON_VALUE,
 				consumes=MediaType.APPLICATION_JSON_VALUE)
@@ -35,4 +36,3 @@ public class UserController {
 		}
 		
 	} 
-
