@@ -6,7 +6,9 @@ public class UserEntity {
 	private String username;
 	private String avatar;
 	 
-	
+	public UserEntity() {
+		super();
+	}
 	public String getEmail() {
 		return email;
 	}
