@@ -1,4 +1,4 @@
-package demo;
+package acs.data;
 
 public enum RoleEnum {
 	PLAYER,

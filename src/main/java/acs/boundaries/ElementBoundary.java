@@ -1,4 +1,4 @@
-package demo;
+package acs.boundaries;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -12,15 +12,18 @@ public class ElementBoundary {
     private String name;
     private Boolean active;
     private Date createdTimeStamp;
-    private HashMap<String,String> createdBy = new HashMap<String,String>();
+    private Map<String,String> createdBy;
     private Location location;
-    private HashMap<String,Object> elementAttributes = new HashMap<String,Object>();
+    private Map<String,Object> elementAttributes;
     
     public ElementBoundary() {
+		super();
+    	createdBy = new HashMap<String,String>();
+    	elementAttributes = new HashMap<String,Object>();
 	}
 
 	public ElementBoundary(String managerEmail, String elementId) {
-	    super();
+	    this(); //call empty constructor 
 	    setElementId(elementId);
 	    setCreatedBy(managerEmail);
 	}

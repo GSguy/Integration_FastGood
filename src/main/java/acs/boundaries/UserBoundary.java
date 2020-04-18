@@ -1,4 +1,6 @@
-package demo;
+package acs.boundaries;
+
+import acs.data.RoleEnum;
 
 public class UserBoundary {
 	
@@ -8,12 +10,13 @@ public class UserBoundary {
 	private String avatar;
 	 
 	public UserBoundary() {
-		 
+		 super();
+
 	 }
 	
 	public UserBoundary(String email) {
-		 super();
-		 setEmail(email);
+		this();
+		setEmail(email);
 	}
 	
 	public String getEmail() {

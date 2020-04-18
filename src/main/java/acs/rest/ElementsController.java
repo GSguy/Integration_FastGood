@@ -1,7 +1,9 @@
-package demo;
+package acs.rest;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import acs.boundaries.ElementBoundary;
 
 @RestController
 public class ElementsController {
