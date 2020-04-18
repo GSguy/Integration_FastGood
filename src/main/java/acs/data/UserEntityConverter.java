@@ -23,8 +23,8 @@ public class UserEntityConverter {
 		if(user.getEmail()!=null) {
 			entity.setEmail(user.getEmail());
 		}
-		RoleEnum type=user.getRole();
-		if(type!=null && type==RoleEnum.ADMIN||type==RoleEnum.MANAGER||type==RoleEnum.PLAYER) {
+		UserRole type=user.getRole();
+		if(type!=null && type==UserRole.ADMIN||type==UserRole.MANAGER||type==UserRole.PLAYER) {
 			entity.setRole(type);
 		}
 		if(user.getAvatar()!=null) {

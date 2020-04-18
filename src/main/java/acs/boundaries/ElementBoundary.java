@@ -25,7 +25,6 @@ public class ElementBoundary {
 	public ElementBoundary(String managerEmail, String elementId) {
 	    this(); //call empty constructor 
 	    setElementId(elementId);
-	    setCreatedBy(managerEmail);
 	}
     
 	public String getName() {
@@ -56,8 +55,8 @@ public class ElementBoundary {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy.put("email", createdBy);
+	public void setCreatedBy(Map<String, String> createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public Location getLocation() {
@@ -72,8 +71,8 @@ public class ElementBoundary {
 		return elementAttributes;
 	}
 
-	public void setElementAttributes(String key ,Object value) {
-		this.elementAttributes.put(key, value);
+	public void setElementAttributes(Map<String, Object> elementAttributes) {
+		this.elementAttributes = elementAttributes;
 	}
 
 	public String getType() {
