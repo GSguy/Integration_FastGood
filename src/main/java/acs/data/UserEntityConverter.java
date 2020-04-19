@@ -38,7 +38,8 @@ public class UserEntityConverter {
 		
 	}
 	public UserBoundary convertFromEntity(UserEntity user) {
-		UserBoundary boundary=new UserBoundary();
+	UserBoundary boundary=new UserBoundary();
+
 	    boundary.setEmail(user.getEmail());
 	    boundary.setAvatar(user.getAvatar());
 	    boundary.setUsername(user.getUsername());
