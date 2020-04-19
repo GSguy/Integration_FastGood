@@ -1,4 +1,4 @@
-package demo;
+package acs.boundaries;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -8,12 +8,16 @@ public class ActionBoundary {
 	
 	private String actionID;
 	private String type;
-	private Map<String, String> element = new HashMap<String,String>();;
+	private Map<String, String> element;
 	private Date createdTimeStamp;
-	private Map<String, String> invokedBy = new HashMap<String,String>();;
-    private Map<String,Object> actionAttributes = new HashMap<String,Object>();;
+	private Map<String, String> invokedBy;
+    private Map<String,Object> actionAttributes;
     
 	public ActionBoundary() {
+		super();
+		element = new HashMap<String,String>();
+		invokedBy = new HashMap<String,String>();
+		actionAttributes = new HashMap<String,Object>();
 	}
 	
 
