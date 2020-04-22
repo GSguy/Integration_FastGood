@@ -95,7 +95,7 @@ public class ElementServiceMockup implements ElementService{
 
 	@Override
 	public List<ElementBoundary> getAll(String userEmail) {
-		this.checkIfManagerEmailExist(userEmail); // TODO check why this is userEmail and not adminEmail
+		this.checkIfUserEmailExist(userEmail); // TODO check why this is userEmail and not adminEmail
 		return this.database // Map of ElementEntity with Long key
 				.values() // Collection ofElementEntity 
 				.stream() // Stream of ElementEntity
@@ -105,7 +105,7 @@ public class ElementServiceMockup implements ElementService{
 
 	@Override
 	public ElementBoundary getSpecificElement(String userEmail, String elementId) {
-		this.checkIfManagerEmailExist(userEmail); // TODO check why this is userEmail and not adminEmail
+		this.checkIfUserEmailExist(userEmail); // TODO check why this is userEmail and not adminEmail
 		ElementEntity entity =  this.database
 				.get(this.elementEntityConverter.toEntityId(elementId));
 		
@@ -115,18 +115,21 @@ public class ElementServiceMockup implements ElementService{
 					.convertFromEntity(
 						entity);
 		}else {
-			throw new ElementNotFoundExcetpion("could not find message for id: " + elementId);
+			throw new EntityNotFoundException("could not find message for id: " + elementId);
 		}
 	}
 
 	@Override
 	public void deleteAllElements(String adminEmail) {
-		// TODO Auto-generated method stub - Need to ask Eyal About missing API documantion
-		
+		this.checkIfManagerEmailExist(adminEmail); // TODO check why this is userEmail and not adminEmail
+		this.database.clear();
 	}
 	
 	public void checkIfManagerEmailExist(String adminEmail) {
-		
+		// TODO STUB
+	}
+	public void checkIfUserEmailExist(String userEmail) {
+		// TODO STUB
 	}
 
 }

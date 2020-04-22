@@ -63,7 +63,7 @@ public class UserServiceMockup implements UserService{
 	    	  return this.userConverter.convertFromEntity(user);
 	      }
 	      else {
-	    	  throw new UserNotFoundException("user not found:"+userEmail);
+	    	  throw new EntityNotFoundException("user not found:"+userEmail);
 	      }
 			
 	}
@@ -96,10 +96,10 @@ public class UserServiceMockup implements UserService{
 	}
 	@Override
 	public List<UserBoundary> getAllUsers(String adminEmail) {
-		
      return this.database.values().stream().map(entity->this.userConverter.convertFromEntity(entity)) 
 				.collect(Collectors.toList());
 	}
+	
 	@Override
 	public void deleteAllUsers(String adminEmail) {
 		this.database.clear();		
