@@ -1,4 +1,5 @@
 package acs.rest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -7,15 +8,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.UserBoundary;
+import acs.logic.UserService;
 @RestController
 public class UserController {
+	private UserService userService;
+
+	@Autowired
+	public UserController(UserService userService) {
+		super();
+		this.userService = userService;
+	}
 	
 	
 	@RequestMapping(path = "/acs/users/login/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary getUsers (@PathVariable("userEmail") String userEmail) {
-		return new UserBoundary (userEmail);
+	public UserBoundary login (@PathVariable("userEmail") String userEmail) {
+		return this.userService.login(userEmail);
 	}
 	
 	@RequestMapping(path = "/acs/users",
@@ -23,8 +32,7 @@ public class UserController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes=MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary createNewUser(@RequestBody UserBoundary input) {
-		UserBoundary user=input;
-		return user;
+		return this.userService.createUser(input);
 	}
 
 
@@ -35,7 +43,7 @@ public class UserController {
 	public void update (
 			@PathVariable("userEmail") String userEmail, 
 			@RequestBody UserBoundary update) {
-		// TODO update message with id: messageId with details within update
+        this.userService.updateUser(userEmail, update);
 	}
 	
 } 
