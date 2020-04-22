@@ -27,6 +27,7 @@ public class UserEntityConverter {
 		RoleEnum type=RoleEnum.valueOf(user.getRole().name().toUpperCase());
 		if(type!=null && type==RoleEnum.ADMIN||type==RoleEnum.MANAGER||type==RoleEnum.PLAYER) {
 			entity.setRole(RoleEnum.valueOf(user.getRole().name().toUpperCase()));
+
 		}
 		if(user.getAvatar()!=null) {
 			entity.setAvatar(user.getAvatar());

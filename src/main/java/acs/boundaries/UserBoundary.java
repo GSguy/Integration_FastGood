@@ -1,11 +1,11 @@
 package acs.boundaries;
 
-import acs.data.RoleEnum;
+import acs.data.UserRole;
 
 public class UserBoundary {
 	
 	private String email;
-	private RoleEnum role;
+	private UserRole role;
 	private String username;
 	private String avatar;
 	 
@@ -43,11 +43,11 @@ public class UserBoundary {
 		this.avatar = avatar;
 	}
 	
-	public RoleEnum getRole() {
+	public UserRole getRole() {
 		return role;
 	}
 	
-	public void setRole(RoleEnum role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}	
   

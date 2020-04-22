@@ -1,6 +1,6 @@
 package acs.data;
 
-public enum RoleEnum {
+public enum UserRole {
 	PLAYER,
 	MANAGER,
 	ADMIN

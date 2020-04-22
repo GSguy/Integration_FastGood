@@ -2,7 +2,7 @@ package acs.data;
 
 public class UserEntity {
 	private String email;
-	private RoleEnum role;
+	private UserRole role;
 	private String username;
 	private String avatar;
 	 
@@ -33,11 +33,11 @@ public class UserEntity {
 		this.avatar = avatar;
 	}
 	
-	public RoleEnum getRole() {
+	public UserRole getRole() {
 		return role;
 	}
 	
-	public void setRole(RoleEnum role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}	
 }
