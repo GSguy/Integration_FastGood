@@ -24,9 +24,9 @@ public class UserEntityConverter {
 			entity.setEmail(user.getEmail());
 		}
 		
-		RoleEnum type=RoleEnum.valueOf(user.getRole().name().toUpperCase());
-		if(type!=null && type==RoleEnum.ADMIN||type==RoleEnum.MANAGER||type==RoleEnum.PLAYER) {
-			entity.setRole(RoleEnum.valueOf(user.getRole().name().toUpperCase()));
+		UserRole type=UserRole.valueOf(user.getRole().name().toUpperCase());
+		if(type!=null && type==UserRole.ADMIN||type==UserRole.MANAGER||type==UserRole.PLAYER) {
+			entity.setRole(UserRole.valueOf(user.getRole().name().toUpperCase()));
 
 		}
 		if(user.getAvatar()!=null) {
@@ -45,7 +45,7 @@ public class UserEntityConverter {
 	    boundary.setAvatar(user.getAvatar());
 	    boundary.setUsername(user.getUsername());
 	    if(user.getRole()!=null) {
-	    	boundary.setRole(RoleEnum.valueOf(user.getRole().name().toUpperCase()));
+	    	boundary.setRole(UserRole.valueOf(user.getRole().name().toUpperCase()));
 	    }
 	    return boundary;
 	}

@@ -85,7 +85,7 @@ public class UserServiceMockup implements UserService{
 			dirty=true;
 		}
 		if(update.getRole()!=null) {
-			existing.setRole(RoleEnum.valueOf(update.getRole().name().toUpperCase()));
+			existing.setRole(UserRole.valueOf(update.getRole().name().toUpperCase()));
 			dirty=true;
 		}
 		
