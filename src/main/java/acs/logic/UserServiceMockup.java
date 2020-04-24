@@ -24,7 +24,6 @@ public class UserServiceMockup implements UserService{
 	
 	
 	public UserServiceMockup() {
-		System.err.println("spring initialized me");
 	}
 	
 	@Autowired
