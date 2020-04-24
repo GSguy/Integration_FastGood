@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ActionBoundary;
 import acs.boundaries.UserBoundary;
-import acs.logic.ActionService;
 import acs.logic.ElementService;
 import acs.logic.UserService;
 
@@ -19,15 +18,15 @@ import acs.logic.UserService;
 public class AdminController {
 	private ElementService elementService;
 	private UserService userService;
-	private ActionService actionService;
+	//private ActionService actionService;
 	
 	// injection
 	@Autowired
-	public AdminController(ElementService elementService, UserService userService, ActionService actionService) {
+	public AdminController(ElementService elementService, UserService userService) {  // , ActionService actionService
 		super();
 		this.elementService =  elementService;
 		this.userService = userService;
-		this.actionService = actionService;
+		//this.actionService = actionService;
 	}
 		
 	// DELETE - delete content (SQL: delete)
@@ -50,7 +49,7 @@ public class AdminController {
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}",
 			method = RequestMethod.DELETE)
 	public void deleteAllElements (@PathVariable("adminEmail") String adminEmail) {
-		actionService.deleteAllActions(adminEmail);
+		//actionService.deleteAllActions(adminEmail);
 	}
 		
 	@RequestMapping(path ="/acs/admin/users/{adminEmail}",
@@ -65,7 +64,8 @@ public class AdminController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ActionBoundary> exportAllActions (@PathVariable("adminEmail") String adminEmail) {
-		return actionService.getAllActions(adminEmail);
+		//return actionService.getAllActions(adminEmail);
+		return null;
 	}
 	
 }

@@ -11,11 +11,13 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import acs.boundaries.ElementBoundary;
 import acs.data.ElementEntity;
 import acs.data.ElementEntityConverter;
 
+@Service
 public class ElementServiceMockup implements ElementService{
 	private Map<Long, ElementEntity> database; 
 	private ElementEntityConverter elementEntityConverter;
