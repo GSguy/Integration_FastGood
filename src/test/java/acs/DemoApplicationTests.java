@@ -48,15 +48,10 @@ class DemoApplicationTests {
 								ElementBoundary.class,"xx@xx.com");
 
 		// THEN the server responds with the same message details, except for the timestamp and the id
-		System.out.println(responseFromServer.toString());
-		System.out.println("");
-		System.out.println(messageToPost.toString());
 		// cleanup - delete all messages from database
 		assertThat(responseFromServer)
 				.isEqualToComparingOnlyGivenFields(messageToPost,
 						"elementId");
-		assertThat(responseFromServer.getElementId()).isEqualTo(messageToPost.getElementId());
-		// do nothing
 	}
 
 }
