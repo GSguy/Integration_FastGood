@@ -91,4 +91,17 @@ public class ElementBoundary {
 		this.elementId = elementId;
 	}
 
+	@Override
+	public String toString() {
+		return "ElementBoundary{" +
+				"elementId='" + elementId + '\'' +
+				", type='" + type + '\'' +
+				", name='" + name + '\'' +
+				", active=" + active +
+				", createdTimeStamp=" + createdTimeStamp +
+				", createdBy=" + createdBy +
+				", location=" + location +
+				", elementAttributes=" + elementAttributes +
+				'}';
+	}
 }
