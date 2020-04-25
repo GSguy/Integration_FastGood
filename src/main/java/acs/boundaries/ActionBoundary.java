@@ -41,8 +41,8 @@ public class ActionBoundary {
 		return actionAttributes;
 	}
 
-	public void setActionAttributes(String key ,Object value) {
-		this.actionAttributes.put(key, value);
+	public void setActionAttributes(Map<String,Object> actionAttributes) {
+		this.actionAttributes = actionAttributes;
 	}
 
 	public String getActionID() {
