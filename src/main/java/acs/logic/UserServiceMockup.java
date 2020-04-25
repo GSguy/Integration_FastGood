@@ -17,11 +17,11 @@ import acs.boundaries.UserBoundary;
 import acs.data.*;
 
 @Service
-public class UserServiceMockup implements UserService{
+public class UserServiceMockup implements UserService {
+	
 	private Map<String, UserEntity> database; 
 	private UserEntityConverter userConverter;
 	private AtomicReference<String> userId;
-	
 	
 	public UserServiceMockup() {
 	}
@@ -37,8 +37,6 @@ public class UserServiceMockup implements UserService{
 		this.database = Collections.synchronizedMap(new TreeMap<>());
 		this.userId = new  AtomicReference<String>();
 	}
-	
-	
 	
 	@Override
 	public UserBoundary createUser(UserBoundary user) {
@@ -66,11 +64,12 @@ public class UserServiceMockup implements UserService{
 	      }
 			
 	}
+	
 	@Override
 	public UserBoundary login(String userEmail) {
      return this.getUser(userEmail);
-		
 	}
+	
 	@Override
 	public UserBoundary updateUser(String userEmail, UserBoundary update) {
 		UserBoundary existing=this.getUser(userEmail);

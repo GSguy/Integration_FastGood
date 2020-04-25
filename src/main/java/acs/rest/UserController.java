@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.UserBoundary;
 import acs.logic.UserService;
+
 @RestController
 public class UserController {
 	private UserService userService;
@@ -46,4 +47,4 @@ public class UserController {
         this.userService.updateUser(userEmail, update);
 	}
 	
-} 
+}

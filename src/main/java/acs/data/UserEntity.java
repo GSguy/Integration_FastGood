@@ -1,6 +1,7 @@
 package acs.data;
 
 public class UserEntity {
+	
 	private String email;
 	private UserRole role;
 	private String username;

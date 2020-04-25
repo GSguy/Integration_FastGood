@@ -18,7 +18,8 @@ import acs.data.ElementEntity;
 import acs.data.ElementEntityConverter;
 
 @Service
-public class ElementServiceMockup implements ElementService{
+public class ElementServiceMockup implements ElementService {
+	
 	private Map<Long, ElementEntity> database; 
 	private ElementEntityConverter elementEntityConverter;
 	private AtomicLong nextId;
@@ -116,7 +117,7 @@ public class ElementServiceMockup implements ElementService{
 				this.elementEntityConverter
 					.convertFromEntity(
 						entity);
-		}else {
+		} else {
 			throw new EntityNotFoundException("could not find message for id: " + elementId);
 		}
 	}
