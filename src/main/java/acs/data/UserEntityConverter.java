@@ -10,6 +10,7 @@ import acs.boundaries.UserBoundary;
 
 @Component
 public class UserEntityConverter {
+	
 	private ObjectMapper jackson;
 	
 	@PostConstruct

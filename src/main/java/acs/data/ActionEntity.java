@@ -5,15 +5,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ActionEntity {
-	private String actionID;
+	
+	private Long actionID;
 	private String type;
 	private Map<String, String> element;
 	private Date createdTimeStamp;
 	private Map<String, String> invokedBy;
-    private Map<String,Object> actionAttributes;
+    private Map<String, Object> actionAttributes;
     
 	public ActionEntity() {
-	
+		element = new HashMap<String,String>();
+		invokedBy = new HashMap<String,String>();
+		actionAttributes = new HashMap<String,Object>();
 	}
 
 	public Date getCreatedTimeStamp() {
@@ -36,15 +39,15 @@ public class ActionEntity {
 		return actionAttributes;
 	}
 
-	public void setActionAttributes(String key ,Object value) {
-		this.actionAttributes.put(key, value);
+	public void setActionAttributes(Map<String,Object> actionAttributes) {
+		this.actionAttributes = actionAttributes;
 	}
 
-	public String getActionID() {
+	public Long getActionID() {
 		return actionID;
 	}
 
-	public void setActionID(String actionID) {
+	public void setActionID(Long actionID) {
 		this.actionID = actionID;
 	}
 

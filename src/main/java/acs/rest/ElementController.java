@@ -70,6 +70,4 @@ public class ElementController {
 		return this.elementService.getSpecificElement(managerEmail, elementId);
 	}
 	
-	
-	
 }
