@@ -20,7 +20,7 @@ public class ActionEntityConverter {
 		ActionBoundary boundary = new ActionBoundary();
 		
 		boundary.setCreatedTimeStamp(entity.getCreatedTimeStamp());
-		boundary.setActionID(entity.getActionID());
+		boundary.setActionID(this.fromEntityId(entity.getActionID()));
 		boundary.setType(entity.getType());
 		boundary.setActionAttributes(entity.getActionAttributes());
 		
@@ -49,7 +49,7 @@ public class ActionEntityConverter {
 		ActionEntity entity = new ActionEntity();
 		
 		entity.setActionAttributes(boundary.getActionAttributes());
-		entity.setActionID(boundary.getActionID());
+		entity.setActionID(this.toEntityId(boundary.getActionID()));
 		entity.setCreatedTimeStamp(boundary.getCreatedTimeStamp());
 		entity.setType(boundary.getType());
 		
@@ -70,6 +70,22 @@ public class ActionEntityConverter {
 		}		
 		
 		return entity;
+	}
+	
+	public Long toEntityId(String id) {
+		if (id != null) {
+			return Long.parseLong(id);
+		}else {
+			return null;
+		}
+	}
+
+	public String fromEntityId(Long id) {
+		if (id != null) {
+			return id.toString();
+		}else {
+			return null;
+		}
 	}
 	 
 }

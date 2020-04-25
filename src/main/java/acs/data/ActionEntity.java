@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ActionEntity {
 	
-	private String actionID;
+	private Long actionID;
 	private String type;
 	private Map<String, String> element;
 	private Date createdTimeStamp;
@@ -43,11 +43,11 @@ public class ActionEntity {
 		this.actionAttributes = actionAttributes;
 	}
 
-	public String getActionID() {
+	public Long getActionID() {
 		return actionID;
 	}
 
-	public void setActionID(String actionID) {
+	public void setActionID(Long actionID) {
 		this.actionID = actionID;
 	}
 

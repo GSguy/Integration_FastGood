@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -20,9 +21,9 @@ import acs.data.ActionEntityConverter;
 @Service
 public class ActionServicesMockup implements ActionService {
 
-	private Map<String, ActionEntity> database; 
+	private Map<Long, ActionEntity> database; 
 	private ActionEntityConverter actionEntityConverter;
-	private AtomicReference<String> actionId;
+	private AtomicLong nextId;
 		
 	public ActionServicesMockup() {
 		
@@ -32,7 +33,7 @@ public class ActionServicesMockup implements ActionService {
 	public void init() {
 		// create thread safe list
 		this.database = Collections.synchronizedMap(new TreeMap<>());
-		this.actionId = new AtomicReference<String>();
+		this.nextId = new AtomicLong(0L);
 	}
 	
 	@Autowired
@@ -42,20 +43,13 @@ public class ActionServicesMockup implements ActionService {
 	
 	@Override
 	public Object invokeAction(ActionBoundary action) {
-		// TODO Auto-generated method stub
 		ActionEntity entity = this.actionEntityConverter.toEntity(action);
 		
-		if (entity.getActionID() == "" || entity.getActionID() == null)
-			entity.setActionID(actionId.get()); //create new ID
-		else
-			entity.setActionID(action.getActionID());
-		
+		// set Server fields
+		entity.setActionID(nextId.incrementAndGet());//create new ID - Not consider user ID INPUT
 		entity.setCreatedTimeStamp( entity.getCreatedTimeStamp() != null ? entity.getCreatedTimeStamp() : new Date() );
 		
-		//to fix:
-		//if (this.database.get(entity.getActionID()) == null)
-		//	this.database.put(entity.getActionID(), entity);
-    		
+		this.database.put(entity.getActionID(), entity);
     	return this.actionEntityConverter.convertFromEntity(entity);
 	}
 
