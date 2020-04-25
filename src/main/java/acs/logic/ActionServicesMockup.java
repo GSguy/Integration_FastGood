@@ -22,7 +22,7 @@ public class ActionServicesMockup implements ActionService {
 
 	private Map<String, ActionEntity> database; 
 	private ActionEntityConverter actionEntityConverter;
-	private AtomicReference<String> userId;
+	private AtomicReference<String> actionId;
 		
 	public ActionServicesMockup() {
 		
@@ -32,7 +32,7 @@ public class ActionServicesMockup implements ActionService {
 	public void init() {
 		// create thread safe list
 		this.database = Collections.synchronizedMap(new TreeMap<>());
-		this.userId = new  AtomicReference<String>();
+		this.actionId = new AtomicReference<String>();
 	}
 	
 	@Autowired
@@ -46,14 +46,15 @@ public class ActionServicesMockup implements ActionService {
 		ActionEntity entity = this.actionEntityConverter.toEntity(action);
 		
 		if (entity.getActionID() == "" || entity.getActionID() == null)
-			entity.setActionID(userId.get()); //create new ID
+			entity.setActionID(actionId.get()); //create new ID
 		else
 			entity.setActionID(action.getActionID());
 		
 		entity.setCreatedTimeStamp( entity.getCreatedTimeStamp() != null ? entity.getCreatedTimeStamp() : new Date() );
 		
-		if (this.database.get(entity.getActionID()) == null)
-			this.database.put(entity.getActionID(), entity);
+		//to fix:
+		//if (this.database.get(entity.getActionID()) == null)
+		//	this.database.put(entity.getActionID(), entity);
     		
     	return this.actionEntityConverter.convertFromEntity(entity);
 	}
