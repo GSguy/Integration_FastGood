@@ -2,6 +2,7 @@ package acs.rest;
 
 import java.util.List;
 
+import acs.logic.ActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,8 +45,6 @@ public class AdminController {
 	public void deleteAllElementss (@PathVariable("adminEmail") String adminEmail) {
 		elementService.deleteAllElements(adminEmail);
 	}
-		
-		
 	// DELETE - delete content (SQL: delete)
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}",
 			method = RequestMethod.DELETE)

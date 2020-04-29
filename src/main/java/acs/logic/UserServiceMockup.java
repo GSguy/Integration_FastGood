@@ -43,15 +43,17 @@ public class UserServiceMockup implements UserService {
       UserEntity entity=this.userConverter.toEntity(user);
 
     	if(entity.getAvatar()!=null && entity.getEmail()!=null && entity.getRole()!=null && entity.getUsername()!=null) {
-    		if(this.userId.get().equals(entity.getEmail())==false  && this.database.get(entity.getEmail())==null) //check if user exist
+    		//if(this.userId.get().equals(entity.getEmail())==false  && this.database.get(entity.getEmail())==null) //check if user exist
     	     this.userId.set(entity.getEmail());
     			this.database
  			.put(userId.get(), entity);
     	     return this.userConverter.convertFromEntity(entity);
+    	//}
+    	//else {
+		//return null;
     	}
-    	else {
-		return null;
-    	}
+    	else
+    		return  null;
 	}
 	
 	public  UserBoundary getUser(String userEmail) {
