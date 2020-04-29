@@ -13,7 +13,9 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -36,25 +38,26 @@ class ElementControllerTests {
 	public void init() {
 		this.restTemplate = new RestTemplate();
 	}
+
 	@BeforeEach
 	public void setup() {
 		this.url = "http://localhost:" + port + "/acs/elements";
 	}
 
 	@Test
-	public void testPostMessageReturnsMessageDetailsInResponse() throws Exception{
+	public void testPostMessageReturnsMessageDetailsInResponse() throws Exception {
 		// GIVEN server is up
 		// do nothing
 		// WHEN I POST /messages with a new message
 		ElementBoundary messageToPost
-				= new ElementBoundary("xx@xx.com","1");
+				= new ElementBoundary("xx@xx.com", "1");
 
 		ElementBoundary responseFromServer =
 				this.restTemplate
 						.postForObject(
 								this.url + "/{managerEmail}",
 								messageToPost,
-								ElementBoundary.class,"xx@xx.com");
+								ElementBoundary.class, "xx@xx.com");
 
 		// THEN the server responds with the same message details, except for the timestamp and the id
 		// cleanup - delete all messages from database
@@ -63,17 +66,15 @@ class ElementControllerTests {
 						"elementId");
 	}
 
-
-
 	@Test
-	public void testGetAllElementsOnServerInitReturnsEmptyArray() throws Exception{
+	public void testGetAllElementsOnServerInitReturnsEmptyArray() throws Exception {
 		// GIVEN server is up
 		// do nothing
 		// WHEN I POST /messages with a new message
-		ElementBoundary [] responseFromServer =
+		ElementBoundary[] responseFromServer =
 				this.restTemplate
 						.getForObject(
-								this.url+"/{managerEmail}" ,
+								this.url + "/{managerEmail}",
 								ElementBoundary[].class,
 								"xx@xx.com");
 		// THEN the server responds with the same message details, except for the timestamp and the id
@@ -81,25 +82,81 @@ class ElementControllerTests {
 		assertThat(responseFromServer);
 
 	}
-	@Test
-	public void testGetElementsWithEmailAndIdy() throws Exception{
-		// GIVEN server is up
-		// do nothing
-		// WHEN I POST /messages with a new message
-		ElementBoundary [] responseFromServer =
+
+	//@Test
+	public void testGetElementsWithEmailAndIdy() throws Exception {
+		ElementBoundary messageToPost
+				= new ElementBoundary("xx@xx.com", "1");
+
+		ElementBoundary responseFromServer =
 				this.restTemplate
-						.getForObject(
-								this.url+"/{managerEmail}" ,
-								ElementBoundary[].class,
-								"xx@xx.com");
+						.postForObject(
+								this.url + "/{managerEmail}",
+								messageToPost,
+								ElementBoundary.class, "xx@xx.com");
+
 		// THEN the server responds with the same message details, except for the timestamp and the id
 		// cleanup - delete all messages from database
-		assertThat(responseFromServer);
+		assertThat(responseFromServer)
+				.isEqualToComparingOnlyGivenFields(messageToPost,
+						"elementId");
 
 	}
-//	@Test
-//	public void testGetAllMessagesWithDatabaseContainig3MessagesReturnsAllMessagesInTheDatabase() throws Exception{
-//		// GIVEN server is up
+
+	@Test
+	public void testUpdatingElementsWithEmailAndIdy() throws Exception {
+
+		ElementBoundary messageToPost
+				= new ElementBoundary("xx@xx.com", "1");
+
+		ElementBoundary responseFromServer =
+				this.restTemplate
+						.postForObject(
+								this.url + "/{managerEmail}",
+								messageToPost,
+								ElementBoundary.class, "xx@xx.com");
+
+		// WHEN I PUT /messages/{x} and {"message":"goodbye", "type":"GARBAGE"}
+		responseFromServer.setName("test4");
+
+		this.restTemplate
+				.put(this.url + "/{managerEmail}/{elementId}",
+						responseFromServer,
+						"xx@xx.com", "1");
+
+		// THEN the PUT operation is responded with status 2xx
+		// AND the database is updated
+		// AND the database was not updated with non modified fields
+
+		assertThat(this.restTemplate
+				.getForObject(
+						this.url + "/{managerEmail}/{elementId}", ElementBoundary.class, responseFromServer.getName(), "1"))
+				.extracting(
+						"elementId",
+						"name"
+				)
+				.containsExactly(
+						"1",
+						"test4");
+	}
+
+
+	@Test
+	public void testGetAllMessagesWithDatabaseContainig3MessagesReturnsAllMessagesInTheDatabase() throws Exception {
+
+		List<ElementBoundary> databaseContent =
+				IntStream.range(0, 3) // Stream<Integer>
+						.mapToObj(i ->
+								new ElementBoundary(i + "gmail.com", i + "")
+						) // Stream<ComplexMessageBoundary>
+						.map(msg -> this.restTemplate
+								.postForObject(this.url + "/{managerEmail}",
+										msg,
+										ElementBoundary.class, "1")) // Stream<ComplexMessageBoundary>
+						.collect(Collectors.toList()); // List<ComplexMessageBoundary>
+
+
+		//		// GIVEN server is up
 //		// AND the database contains 3 messages
 //		List<ElementBoundary> databaseContent =
 //				IntStream.range(0, 3) // Stream<Integer>
@@ -128,6 +185,10 @@ class ElementControllerTests {
 //		assertThat(dataFromServer)
 //				.usingRecursiveFieldByFieldElementComparator()
 //				.containsExactlyInAnyOrderElementsOf(databaseContent);
-//
-//	}
+
+	}
+
+
+
 }
+

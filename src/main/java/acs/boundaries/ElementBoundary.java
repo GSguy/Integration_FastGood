@@ -23,10 +23,11 @@ public class ElementBoundary {
 	}
 
 	public ElementBoundary(String managerEmail, String elementId) {
-	    this(); //call empty constructor 
+	    this(); //call empty constructor
 	    setElementId(elementId);
 	}
-    
+
+
 	public String getName() {
 		return name;
 	}

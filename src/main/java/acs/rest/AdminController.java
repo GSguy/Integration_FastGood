@@ -2,6 +2,7 @@ package acs.rest;
 
 import java.util.List;
 
+import acs.logic.ActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,7 @@ import acs.logic.UserService;
 public class AdminController {
 	private ElementService elementService;
 	private UserService userService;
-	//private ActionService actionService;
+	private ActionService actionService;
 	
 	// injection
 	@Autowired
@@ -43,13 +44,11 @@ public class AdminController {
 	public void deleteAllElementss (@PathVariable("adminEmail") String adminEmail) {
 		elementService.deleteAllElements(adminEmail);
 	}
-		
-		
 	// DELETE - delete content (SQL: delete)
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}",
 			method = RequestMethod.DELETE)
 	public void deleteAllElements (@PathVariable("adminEmail") String adminEmail) {
-		//actionService.deleteAllActions(adminEmail);
+		actionService.deleteAllActions(adminEmail);
 	}
 		
 	@RequestMapping(path ="/acs/admin/users/{adminEmail}",
