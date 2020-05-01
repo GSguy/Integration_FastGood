@@ -33,8 +33,8 @@ public class ActionBoundary {
 		return invokedBy;
 	}
 
-	public void setInvokedBy(String invokedBy) {
-		this.invokedBy.put("email", invokedBy);
+	public void setInvokedBy(Map<String, String> invokedBy) {
+		this.invokedBy = invokedBy;
 	}
 
 	public Map<String, Object> getActionAttributes() {
@@ -66,8 +66,7 @@ public class ActionBoundary {
 		return element;
 	}
 
-	public void setElement(String element) {
-		this.element.put("elementId", element);
+	public void setElement(Map<String, String> element) {
+		this.element = element;
 	}
-	
 }
