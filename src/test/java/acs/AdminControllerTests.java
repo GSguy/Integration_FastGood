@@ -43,12 +43,12 @@ public class AdminControllerTests {
     public ActionBoundary createActionMessageForTesting()
     {
         ActionBoundary newActionBoundary = new ActionBoundary();
-        HashMap m=new HashMap<String,Object>();
-        m.put("1","1");
+        HashMap testMap=new HashMap<String,Object>();
+        testMap.put("1","1");
         newActionBoundary.setActionID("1");
-        newActionBoundary.setActionAttributes(m);
-        newActionBoundary.setElement("2");
-        newActionBoundary.setInvokedBy("3");
+        newActionBoundary.setActionAttributes(testMap);
+        newActionBoundary.setElement(testMap);
+        newActionBoundary.setInvokedBy(testMap);
         return newActionBoundary;
     }
     public ActionBoundary createPostMessageAndReturningTheMessage(ActionBoundary messageToPost)
@@ -89,7 +89,7 @@ public class AdminControllerTests {
         ElementBoundary responseFromServer =
                 this.restTemplate
                         .postForObject(
-                                this.url + "/{managerEmail}",
+                                this.url + "/elements/{managerEmail}",
                                 messageToPost,
                                 ElementBoundary.class,"xx@xx.com");
 
@@ -99,8 +99,6 @@ public class AdminControllerTests {
                 .isEqualToComparingOnlyGivenFields(messageToPost,
                         "elementId");
     }
-
-
     @Test
     // DELETE - delete all elements content (SQL: delete)
     public void testDeleteAllElementWithOneElementCreationForTesting() throws  Exception{
@@ -161,7 +159,7 @@ public class AdminControllerTests {
 
         System.err.println(elementForTesting);
 
-        this.restTemplate.delete(this.url + "actions", ActionBoundary.class);
+        this.restTemplate.delete(this.url + "/admin/actions/{adminEmail}", ActionBoundary.class,"xx@xx.com");
 
         ActionBoundary[] responseFromServer =
                 this.restTemplate

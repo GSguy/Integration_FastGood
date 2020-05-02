@@ -1,9 +1,6 @@
 package acs;
 
 import acs.boundaries.ElementBoundary;
-import acs.boundaries.UserBoundary;
-import org.assertj.core.api.AbstractObjectAssert;
-import org.hamcrest.collection.IsMapContaining;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,16 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasEntry;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ElementControllerTests {
@@ -45,14 +33,13 @@ class ElementControllerTests {
 		this.url = "http://localhost:" + port + "/acs/elements";
 	}
 
-
 	@Test
 	public void testPostMessageReturnsMessageDetailsInResponse() throws Exception {
 		// GIVEN server is up
 		// do nothing
 		// WHEN I POST /elements/xx@xx.com with a new message
 		ElementBoundary messageToPost
-				= new ElementBoundary("xx@xx.com", "1");
+				= new ElementBoundary("xx@xx.com", "2");
 
 		ElementBoundary responseFromServer =
 				this.restTemplate
