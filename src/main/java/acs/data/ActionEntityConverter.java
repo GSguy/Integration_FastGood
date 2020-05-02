@@ -23,24 +23,9 @@ public class ActionEntityConverter {
 		boundary.setActionID(this.fromEntityId(entity.getActionID()));
 		boundary.setType(entity.getType());
 		boundary.setActionAttributes(entity.getActionAttributes());
-		
-		// marshalling
-		try {
-		boundary.setElement(
-				this.jackson.writeValueAsString(
-				entity.getElement()));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
-		// marshalling
-		try {
-		boundary.setInvokedBy(
-				this.jackson.writeValueAsString(entity.getInvokedBy()));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
+		boundary.setElement(entity.getElement());
+		boundary.setInvokedBy(entity.getInvokedBy());
+
 		return boundary;
 	}
 	
@@ -52,22 +37,8 @@ public class ActionEntityConverter {
 		entity.setActionID(this.toEntityId(boundary.getActionID()));
 		entity.setCreatedTimeStamp(boundary.getCreatedTimeStamp());
 		entity.setType(boundary.getType());
-		
-		// marshalling
-		try {
-			entity.setElement(
-					this.jackson.writeValueAsString(boundary.getElement()));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
-		// marshalling
-		try {
-			entity.setInvokedBy(
-					this.jackson.writeValueAsString(boundary.getInvokedBy()));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}		
+		entity.setElement(boundary.getElement());
+		entity.setInvokedBy(boundary.getInvokedBy());
 		
 		return entity;
 	}
@@ -87,5 +58,4 @@ public class ActionEntityConverter {
 			return null;
 		}
 	}
-	 
 }
