@@ -114,19 +114,28 @@ public class AdminControllerTests {
 
         System.err.println(elementForTesting);
 
-        this.restTemplate.delete(this.url + "admin/elements/{adminEmail}", ElementBoundary.class, "xx@xx.com");
+        this.restTemplate.delete(this.url + "admin/elements/{adminEmail}", String.class, "xx@xx.com");
 
+        ElementBoundary[] responseFromServer =
+                this.restTemplate
+                        .getForObject(
+                                this.url+"elements/{adminEmail}",
+                                ElementBoundary[].class,"xx@xx.com");
+
+        assertThat(responseFromServer).isEmpty();
 
     }
     @Test
     // DELETE - delete all users content (SQL: delete)
     public void testDeleteAllUsersWithOneElementCreationForTesting() throws  Exception{
-
+        // GIVEN server is up
+        // do nothing
+        // WHEN I DELETE admin/users/{managerEmail}
+        //THEN Database is empty
         ElementBoundary elementForTesting=createElementMessageForTesting();
 
         ElementBoundary messageToServer=createPostMessageAndReturningTheMessage(elementForTesting);
 
-        System.err.println(elementForTesting);
 
         this.restTemplate.delete(this.url + "admin/users/{managerEmail}", ElementBoundary.class, "xx@xx.com");
 
@@ -140,10 +149,12 @@ public class AdminControllerTests {
         assertThat(responseFromServer).isEmpty();
     }
 
-  //  @Test
-    // DELETE - delete all actions content (SQL: delete)
+      @Test
     public void testDeleteAllActionsWithOneElementCreationForTesting() throws  Exception{
-
+          // GIVEN server is up
+          // do nothing
+          // WHEN I DELETE /actions
+          //THEN Database is empty
         ActionBoundary elementForTesting=createActionMessageForTesting();
 
         ActionBoundary messageToServer=createPostMessageAndReturningTheMessage(elementForTesting);
