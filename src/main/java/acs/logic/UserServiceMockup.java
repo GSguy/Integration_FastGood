@@ -53,7 +53,7 @@ public class UserServiceMockup implements UserService {
 		//return null;
     	}
     	else
-    		return  null;
+    		return null;
 	}
 	
 	public  UserBoundary getUser(String userEmail) {

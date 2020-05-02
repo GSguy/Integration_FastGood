@@ -42,7 +42,8 @@ public class UserBoundary {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	
+
+
 	public UserRole getRole() {
 		return role;
 	}

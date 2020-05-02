@@ -36,6 +36,7 @@ public class AdminController {
 			method = RequestMethod.DELETE)
 	public void deleteAllUsers (@PathVariable("adminEmail") String adminEmail) {
 		userService.deleteAllUsers(adminEmail);
+
 	}
 		
 		
@@ -59,7 +60,7 @@ public class AdminController {
 		return userService.getAllUsers(adminEmail);
 		
 	}
-		
+
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)

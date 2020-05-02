@@ -44,11 +44,9 @@ public class ActionServicesMockup implements ActionService {
 	@Override
 	public Object invokeAction(ActionBoundary action) {
 		ActionEntity entity = this.actionEntityConverter.toEntity(action);
-		
 		// set Server fields
 		entity.setActionID(nextId.incrementAndGet()); //create new ID - Not consider user ID INPUT
 		entity.setCreatedTimeStamp( entity.getCreatedTimeStamp() != null ? entity.getCreatedTimeStamp() : new Date() );
-		
 		this.database.put(entity.getActionID(), entity);
     	return this.actionEntityConverter.convertFromEntity(entity);
 	}
