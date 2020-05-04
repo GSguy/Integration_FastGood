@@ -25,7 +25,7 @@ public class UserEntityConverter {
 			entity.setEmail(user.getEmail());
 		}
 		
-		UserRole type=UserRole.valueOf(user.getRole().name().toUpperCase());
+		UserRole type = UserRole.valueOf(user.getRole().name().toUpperCase());
 		if(type!=null && type==UserRole.ADMIN||type==UserRole.MANAGER||type==UserRole.PLAYER) {
 			entity.setRole(UserRole.valueOf(user.getRole().name().toUpperCase()));
 

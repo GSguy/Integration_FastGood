@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import acs.boundaries.UserBoundary;
 import acs.data.*;
 
-@Service
+//@Service
 public class UserServiceMockup implements UserService {
 	
 	private Map<String, UserEntity> database; 
@@ -55,6 +55,7 @@ public class UserServiceMockup implements UserService {
     	else
     		return  null;
 	}
+	
 	
 	public  UserBoundary getUser(String userEmail) {
 		  UserEntity user=this.database.get(userEmail);

@@ -81,15 +81,15 @@ public class ElementEntityConverter {
 		return entity;
 	}
 	 
-	public Long toEntityId(String id) {
+	public String toEntityId(String id) {
 		if (id != null) {
-			return Long.parseLong(id);
+			return id;
 		}else {
 			return null;
 		}
 	}
 
-	public String fromEntityId(Long id) {
+	public String fromEntityId(String id) {
 		if (id != null) {
 			return id.toString();
 		}else {
