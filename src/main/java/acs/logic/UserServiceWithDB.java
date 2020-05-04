@@ -46,13 +46,13 @@ public class UserServiceWithDB implements UserService {
 	public UserBoundary createUser(UserBoundary user) {
 		UserEntity entity = this.userConverter.toEntity(user);
 		
-		// Guy: i'm not sure if we need this "if"
-		if(entity.getAvatar()!=null && entity.getEmail()!=null && entity.getRole()!=null && entity.getUsername()!=null) { //Check if all fields are valid
+		// Guy: i'm not sure that we need this "if" check, for now.
+		//if(entity.getAvatar()!=null && entity.getEmail()!=null && entity.getRole()!=null && entity.getUsername()!=null) { //Check if all fields are valid
 			entity = this.userDao.save(entity); // UPSERT:  SELECT  -> UPDATE / INSERT
 			return this.userConverter.convertFromEntity(entity);	
-    	}
-		else
-			return null;
+    	//}
+		//else
+		//	return null;
 	}
 	
 	
@@ -67,6 +67,7 @@ public class UserServiceWithDB implements UserService {
 	    else {
 	    	throw new EntityNotFoundException("could not find user for email:" + userEmail);
 	    }	
+		
 	}
 	
 	
@@ -100,6 +101,7 @@ public class UserServiceWithDB implements UserService {
 	
 	
 	@Override
+	@Transactional (readOnly = true)
 	public List<UserBoundary> getAllUsers(String adminEmail) {
 		
 		// ON INIT - create new Transaction	
@@ -118,6 +120,7 @@ public class UserServiceWithDB implements UserService {
 	
 	
 	@Override
+	@Transactional // (readOnly = false)
 	public void deleteAllUsers(String adminEmail) {
 		this.userDao.deleteAll();
 	}

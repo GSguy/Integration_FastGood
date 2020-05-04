@@ -24,6 +24,8 @@ public class ElementController {
 		this.elementService =  elementService;
 	}
 	
+	
+	// POST -- > store instance in system (SQL: INSERT)
 	@RequestMapping(path = "/acs/elements/{managerEmail}",
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
@@ -48,7 +50,9 @@ public class ElementController {
 		
 		return this.elementService.update(managerEmail, elementId, update);
 	}
-	//--
+	
+	
+	// GET -- > retrieve all instances from system (SQL: SELECT)
 	@RequestMapping(path = "/acs/elements/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,9 +60,11 @@ public class ElementController {
 //		// STUB implementation
 //		ElementBoundary [] allElements=new ElementBoundary[2];
 //		return allElements;
-		return this.elementService.getAll(userEmail); 
+		return this.elementService.getAll(userEmail);
 	}
 	
+	
+	// GET -- > retrieve instance from system (SQL: SELECT)
 	@RequestMapping(path = "/acs/elements/{managerEmail}/{elementId}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)

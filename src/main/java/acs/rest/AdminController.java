@@ -31,6 +31,7 @@ public class AdminController {
 		this.actionService = actionService;
 	}
 		
+	
 	// DELETE - delete content (SQL: delete)
 	@RequestMapping(path = "/acs/admin/users/{adminEmail}",
 			method = RequestMethod.DELETE)
@@ -42,24 +43,29 @@ public class AdminController {
 	// DELETE - delete content (SQL: delete)
 	@RequestMapping(path = "/acs/admin/elements/{adminEmail}",
 			method = RequestMethod.DELETE)
-	public void deleteAllElementss (@PathVariable("adminEmail") String adminEmail) {
+	public void deleteAllElements (@PathVariable("adminEmail") String adminEmail) {
 		elementService.deleteAllElements(adminEmail);
 	}
+	
+	
 	// DELETE - delete content (SQL: delete)
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}",
 			method = RequestMethod.DELETE)
-	public void deleteAllElements (@PathVariable("adminEmail") String adminEmail) {
+	public void deleteAllActions (@PathVariable("adminEmail") String adminEmail) {
 		actionService.deleteAllActions(adminEmail);
 	}
 		
+	
+	// GET -- > retrieve all instances from system (SQL: SELECT)
 	@RequestMapping(path ="/acs/admin/users/{adminEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<UserBoundary> getAllUsers (@PathVariable("adminEmail") String adminEmail) {
 		return userService.getAllUsers(adminEmail);
-		
 	}
-		
+	
+	
+	// GET -- > retrieve all instances from system (SQL: SELECT)
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)

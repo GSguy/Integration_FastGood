@@ -20,16 +20,24 @@ public class UserEntityConverter {
 	
 	
 	public UserEntity toEntity(UserBoundary user) {
-		UserEntity entity=new UserEntity();
-		if(user.getEmail()!=null) {
+		
+		UserEntity entity = new UserEntity();
+		
+		if(user.getEmail() != null) {
 			entity.setEmail(user.getEmail());
 		}
 		
-		UserRole type = UserRole.valueOf(user.getRole().name().toUpperCase());
-		if(type!=null && type==UserRole.ADMIN||type==UserRole.MANAGER||type==UserRole.PLAYER) {
-			entity.setRole(UserRole.valueOf(user.getRole().name().toUpperCase()));
-
+		UserRole type = null;
+		
+		if (user.getRole() != null)
+		{
+			type = UserRole.valueOf(user.getRole().name().toUpperCase());
 		}
+		
+		if( type != null && type == UserRole.ADMIN || type==UserRole.MANAGER || type==UserRole.PLAYER ) {
+			entity.setRole(UserRole.valueOf(user.getRole().name().toUpperCase()));
+		}
+		
 		if(user.getAvatar()!=null) {
 			entity.setAvatar(user.getAvatar());
 		}
