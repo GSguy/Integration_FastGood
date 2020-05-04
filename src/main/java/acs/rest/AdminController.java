@@ -37,6 +37,7 @@ public class AdminController {
 			method = RequestMethod.DELETE)
 	public void deleteAllUsers (@PathVariable("adminEmail") String adminEmail) {
 		userService.deleteAllUsers(adminEmail);
+
 	}
 		
 		
@@ -63,8 +64,8 @@ public class AdminController {
 	public List<UserBoundary> getAllUsers (@PathVariable("adminEmail") String adminEmail) {
 		return userService.getAllUsers(adminEmail);
 	}
-	
-	
+
+  
 	// GET -- > retrieve all instances from system (SQL: SELECT)
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}",
 			method = RequestMethod.GET,
