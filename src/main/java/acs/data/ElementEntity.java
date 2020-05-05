@@ -1,11 +1,17 @@
 package acs.data;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,8 +28,13 @@ public class ElementEntity {
     private String createdBy; // MAP->String
     private Location location;
     private String elementAttributes; // MAP->String
+    private Set<ElementEntity> childrens;
+    private Set<ElementEntity> parents; 
+    
     
     public ElementEntity() {
+    	childrens=new HashSet<>();
+    	parents=new HashSet<>();
 
 	}
 
@@ -95,4 +106,34 @@ public class ElementEntity {
 	public void setElementId(String elementId) {
 		this.elementId = elementId;
 	}
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="parent_child_relationship",joinColumns = @JoinColumn(name = "parent_id"), 
+			  inverseJoinColumns = @JoinColumn(name = "children_id"))
+	public Set<ElementEntity> getParents() {
+		return parents;}
+	
+
+	public void setChildrens(Set<ElementEntity> childrens) {
+		this.childrens = childrens;
+	}
+	
+	@ManyToMany(mappedBy = "parents", fetch = FetchType.LAZY)
+	public Set<ElementEntity> getChildrens() {
+		return childrens;
+	}
+	
+	public void setParents(Set<ElementEntity> parents) {
+		this.parents = parents;
+	}
+	
+	public void addParent(ElementEntity parent) {
+		this.parents.add(parent);
+	}
+	
+	public void addChildren(ElementEntity children) {
+		this.childrens.add(children);
+		children.addParent(this);
+	}
+
 }

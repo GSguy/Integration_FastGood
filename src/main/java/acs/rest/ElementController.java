@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ElementBoundary;
+import acs.boundaries.ElementIdWrapper;
 import acs.logic.ElementService;
 
 
@@ -75,5 +76,38 @@ public class ElementController {
 //		return new ElementBoundary(managerEmail,elementId);
 		return this.elementService.getSpecificElement(managerEmail, elementId);
 	}
+	
+	
+	@RequestMapping(path = "/acs/elements/{managerEmail}/{parentElementId}/children",
+			method = RequestMethod.PUT,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void addElementToElement (
+			@PathVariable("managerEmail") String managerEmail,
+			@PathVariable("parentElementId") String parentElementId,
+			@RequestBody ElementIdWrapper elementId) { //{"responseId":"12"}
+		this.elementService
+			.addElementToParent(parentElementId, elementId.getElementId(),managerEmail);
+	}
+	
+	
+	@RequestMapping(path = "/acs/elements/{userEmail}/{parentElementId}/children",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ElementBoundary[] getChildren (
+			@PathVariable("userEmail") String userEmail,
+			@PathVariable("parentElementId") String parentElementId) { 
+		return this.elementService.getChildrens(parentElementId, userEmail).toArray(new ElementBoundary[0]); // Java Reflection
+	}
+	
+	
+	@RequestMapping(path =  "/acs/elements/{userEmail}/{ChildElementId}/parents",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ElementBoundary[] getParents (
+			@PathVariable("userEmail") String userEmail,
+			@PathVariable("ChildElementId") String ChildElementId)  { 
+		return this.elementService.getParents(ChildElementId, userEmail).toArray(new ElementBoundary[0]); // Java Reflection
+	}
+
 	
 }
