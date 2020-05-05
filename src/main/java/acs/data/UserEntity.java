@@ -1,5 +1,13 @@
 package acs.data;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "Users")
 public class UserEntity {
 	
 	private String email;
@@ -10,6 +18,8 @@ public class UserEntity {
 	public UserEntity() {
 		super();
 	}
+	
+	@Id
 	public String getEmail() {
 		return email;
 	}
@@ -34,6 +44,7 @@ public class UserEntity {
 		this.avatar = avatar;
 	}
 	
+	@Enumerated(EnumType.STRING)
 	public UserRole getRole() {
 		return role;
 	}

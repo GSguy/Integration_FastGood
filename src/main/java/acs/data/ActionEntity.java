@@ -4,21 +4,30 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+//JPA imports:
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name = "Actions")
 public class ActionEntity {
 	
-	private Long actionID;
+	private String actionID;
 	private String type;
-	private Map<String, String> element;
+	private String element; // Map -> String
 	private Date createdTimeStamp;
-	private Map<String, String> invokedBy;
-    private Map<String, Object> actionAttributes;
+	private String invokedBy; // Map -> String
+    private String actionAttributes; // Map -> String
     
 	public ActionEntity() {
-		element = new HashMap<String,String>();
-		invokedBy = new HashMap<String,String>();
-		actionAttributes = new HashMap<String,Object>();
+
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimeStamp() {
 		return createdTimeStamp;
 	}
@@ -27,27 +36,30 @@ public class ActionEntity {
 		this.createdTimeStamp = createdTimeStamp;
 	}
 
-	public Map<String, String> getInvokedBy() {
+	@Lob
+	public String getInvokedBy() {
 		return invokedBy;
 	}
 
-	public void setInvokedBy(Map<String, String> invokedBy) {
+	public void setInvokedBy(String invokedBy) {
 		this.invokedBy = invokedBy;
 	}
 
-	public Map<String, Object> getActionAttributes() {
+	@Lob
+	public String getActionAttributes() {
 		return actionAttributes;
 	}
 
-	public void setActionAttributes(Map<String,Object> actionAttributes) {
+	public void setActionAttributes(String actionAttributes) {
 		this.actionAttributes = actionAttributes;
 	}
 
-	public Long getActionID() {
+	@Id
+	public String getActionID() {
 		return actionID;
 	}
 
-	public void setActionID(Long actionID) {
+	public void setActionID(String actionID) {
 		this.actionID = actionID;
 	}
 
@@ -59,12 +71,12 @@ public class ActionEntity {
 		this.type = type;
 	}
 
-
-	public Map<String, String> getElement() {
+	@Lob
+	public String getElement() {
 		return element;
 	}
 
-	public void setElement(Map<String, String> element) {
+	public void setElement(String element) {
 		this.element = element;
 	}
 	

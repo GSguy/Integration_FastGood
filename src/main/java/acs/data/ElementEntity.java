@@ -1,14 +1,20 @@
 package acs.data;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-import acs.boundaries.Location;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+@Entity
+@Table(name = "Elements")
 public class ElementEntity {
 
-    private Long elementId;
+    private String elementId;
     private String type;
     private String name;
     private Boolean active;
@@ -21,7 +27,6 @@ public class ElementEntity {
 
 	}
 
-    
 	public String getName() {
 		return name;
 	}
@@ -38,6 +43,7 @@ public class ElementEntity {
 		this.active = active;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimeStamp() {
 		return createdTimeStamp;
 	}
@@ -46,6 +52,7 @@ public class ElementEntity {
 		this.createdTimeStamp = createdTimeStamp;
 	}
 
+	@Lob
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -54,6 +61,7 @@ public class ElementEntity {
 		this.createdBy = createdBy;
 	}
 
+	@Embedded
 	public Location getLocation() {
 		return location;
 	}
@@ -62,6 +70,7 @@ public class ElementEntity {
 		this.location = location;
 	}
 
+	@Lob
 	public String getElementAttributes() {
 		return elementAttributes;
 	}
@@ -78,11 +87,12 @@ public class ElementEntity {
 		this.type = type;
 	}
 
-	public Long getElementId() {
+	@Id
+	public String getElementId() {
 		return elementId;
 	}
 
-	public void setElementId(Long elementId) {
+	public void setElementId(String elementId) {
 		this.elementId = elementId;
 	}
 }

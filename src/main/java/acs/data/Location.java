@@ -1,5 +1,8 @@
-package acs.boundaries;
+package acs.data;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Location {
 
 	private Double lat;
@@ -25,6 +28,5 @@ public class Location {
 	}
 	public void setLng(Double lng) {
 		this.lng = lng;
-	}
-	
+	}	
 }

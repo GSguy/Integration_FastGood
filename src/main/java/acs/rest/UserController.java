@@ -21,6 +21,7 @@ public class UserController {
 	}
 	
 	
+	// GET - get content (SQL: select)
 	@RequestMapping(path = "/acs/users/login/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -28,10 +29,12 @@ public class UserController {
 		return this.userService.login(userEmail);
 	}
 	
+	
+	// POST -- > store instance in system (SQL: INSERT)
 	@RequestMapping(path = "/acs/users",
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes=MediaType.APPLICATION_JSON_VALUE)
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary createNewUser(@RequestBody UserBoundary input) {
 		return this.userService.createUser(input);
 	}

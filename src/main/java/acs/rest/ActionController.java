@@ -18,6 +18,7 @@ public class ActionController {
 		this.actionService = actionService;
 	}
 	
+	// POST -- > store instance in system (SQL: INSERT)
 	@RequestMapping(path = "/acs/actions",
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
