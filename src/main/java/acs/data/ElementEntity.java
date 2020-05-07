@@ -2,6 +2,7 @@ package acs.data;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Embedded;
@@ -19,7 +20,18 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "Elements")
 public class ElementEntity {
-
+	
+	/*	ElementBoundary :
+    private String elementId;
+    private String type;
+    private String name;
+    private Boolean active;
+    private Date createdTimeStamp;
+    private Map<String,String> createdBy;
+    private Location location;
+    private Map<String,Object> elementAttributes;
+	 */
+	
     private String elementId;
     private String type;
     private String name;
@@ -45,7 +57,7 @@ public class ElementEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	public Boolean getActive() {
 		return active;
 	}

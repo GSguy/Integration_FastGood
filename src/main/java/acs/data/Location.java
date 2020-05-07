@@ -13,6 +13,7 @@ public class Location {
 	}
 	
 	public Location( Double lat,Double lng) {
+		super();
 		this.setLat(lat);
 		this.setLng(lng);	
 	}

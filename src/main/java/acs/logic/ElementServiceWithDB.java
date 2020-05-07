@@ -27,7 +27,7 @@ import acs.data.ElementEntity;
 import acs.data.ElementEntityConverter;
 
 @Service
-public class ElementServiceWithDB implements ElementService {
+public class ElementServiceWithDB implements RelationalElementService {
 	
 	private ElementDao elementDao; // DAO = Data Access Object 
 	private ElementEntityConverter elementEntityConverter;
@@ -140,10 +140,7 @@ public class ElementServiceWithDB implements ElementService {
 	@Override
 	@Transactional
 	public void addElementToParent(String parentId, String childrenId,String managerEmail) {
-		if(!(this.checkIfManagerEmailExist(managerEmail))){
-			throw new  EntityNotFoundException ("could not find  manager email : " + managerEmail);
-		}
-
+		this.checkIfManagerEmailExist(managerEmail);
 		if (parentId != null && parentId.equals(childrenId)) {
 			throw new RuntimeException("elements cannot add themselves");
 		}
@@ -166,9 +163,7 @@ public class ElementServiceWithDB implements ElementService {
 	@Override
 	@Transactional(readOnly = true)
 	public Set<ElementBoundary> getChildrens(String parentId,String userEmail) {
-		if(!(this.checkIfUserEmailExist(userEmail))){
-			throw new  EntityNotFoundException ("could not find any  user with  email : " + userEmail);
-		}
+		this.checkIfUserEmailExist(userEmail);
 		ElementEntity parent = this.elementDao
 				.findById(this.elementEntityConverter.toEntityId(parentId))
 				.orElseThrow(()->new EntityNotFoundException("could not find parent element with id: " + parentId));
@@ -183,10 +178,7 @@ public class ElementServiceWithDB implements ElementService {
 	@Override
 	@Transactional(readOnly = true)
 	public Collection<ElementBoundary> getParents(String childrenId,String userEmail) {
-		if(!(this.checkIfUserEmailExist(userEmail))){
-			throw new  EntityNotFoundException ("could not find any  user with  email : " + userEmail);
-		}
-		
+		this.checkIfUserEmailExist(userEmail);
 		ElementEntity children = this.elementDao
 				.findById(this.elementEntityConverter.toEntityId(childrenId))
 				.orElseThrow(()->new EntityNotFoundException ("could not find  element with id: " + childrenId));
@@ -200,9 +192,12 @@ public class ElementServiceWithDB implements ElementService {
 	
 	public Boolean checkIfManagerEmailExist(String adminEmail) {
 		return true;// TODO STUB
+		//else throw new  EntityNotFoundException ("could not find any  user with  email : " + adminEmail);
 	}
 	public Boolean checkIfUserEmailExist(String userEmail) {
 		return true; // TODO STUB	
+		//else throw new  EntityNotFoundException ("could not find any  user with  email : " + userEmail);
+
 		}
 
 }

@@ -10,6 +10,14 @@ import javax.persistence.Table;
 @Table(name = "Users")
 public class UserEntity {
 	
+	/*	UserBoundary
+	private String email;
+	private UserRole role;
+	private String username;
+	private String avatar;
+	 */
+	
+	
 	private String email;
 	private UserRole role;
 	private String username;
