@@ -16,6 +16,15 @@ import javax.persistence.TemporalType;
 @Table(name = "Actions")
 public class ActionEntity {
 	
+	/*	Action Boundary:
+	private String actionID;
+	private String type;
+	private Map<String, String> element;
+	private Date createdTimeStamp;
+	private Map<String, String> invokedBy;
+    private Map<String,Object> actionAttributes;
+	 */
+	
 	private String actionID;
 	private String type;
 	private String element; // Map -> String
@@ -62,7 +71,7 @@ public class ActionEntity {
 	public void setActionID(String actionID) {
 		this.actionID = actionID;
 	}
-
+	
 	public String getType() {
 		return type;
 	}

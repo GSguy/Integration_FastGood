@@ -12,15 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 import acs.boundaries.ElementBoundary;
 import acs.boundaries.ElementIdWrapper;
 import acs.logic.ElementService;
+import acs.logic.RelationalElementService;
 
 
 @RestController
 public class ElementController {
-	private ElementService elementService;
+	private RelationalElementService elementService;
 	
 	// injection
 	@Autowired
-	public ElementController(ElementService elementService) {
+	public ElementController(RelationalElementService elementService) {
 		super();
 		this.elementService =  elementService;
 	}

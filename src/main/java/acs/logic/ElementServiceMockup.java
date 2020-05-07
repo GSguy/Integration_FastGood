@@ -137,22 +137,5 @@ public class ElementServiceMockup implements ElementService {
 		// TODO STUB
 	}
 
-	@Override
-	public void addElementToParent(String parentId, String childrenId,String managerEmail) {
-		// TODO STUB
-		
-	}
-
-	@Override
-	public Set<ElementBoundary> getChildrens(String parentId, String userEmail) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<ElementBoundary> getParents(String childrenId, String userEmail) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }
