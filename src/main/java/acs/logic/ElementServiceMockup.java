@@ -1,9 +1,11 @@
 package acs.logic;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -133,6 +135,24 @@ public class ElementServiceMockup implements ElementService {
 	}
 	public void checkIfUserEmailExist(String userEmail) {
 		// TODO STUB
+	}
+
+	@Override
+	public void addElementToParent(String parentId, String childrenId,String managerEmail) {
+		// TODO STUB
+		
+	}
+
+	@Override
+	public Set<ElementBoundary> getChildrens(String parentId, String userEmail) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<ElementBoundary> getParents(String childrenId, String userEmail) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -1,8 +1,10 @@
 package acs.logic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -10,6 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -133,11 +136,73 @@ public class ElementServiceWithDB implements ElementService {
 		this.elementDao.deleteAll();
 	}
 	
-	public void checkIfManagerEmailExist(String adminEmail) {
-		// TODO STUB
+	
+	@Override
+	@Transactional
+	public void addElementToParent(String parentId, String childrenId,String managerEmail) {
+		if(!(this.checkIfManagerEmailExist(managerEmail))){
+			throw new  EntityNotFoundException ("could not find  manager email : " + managerEmail);
+		}
+
+		if (parentId != null && parentId.equals(childrenId)) {
+			throw new RuntimeException("elements cannot add themselves");
+		}
+		
+		ElementEntity parent = this.elementDao
+			.findById(this.elementEntityConverter.toEntityId(parentId))
+			.orElseThrow(()->new EntityNotFoundException("could not find parent element with id: " + parentId));
+
+		ElementEntity children = this.elementDao
+				.findById(this.elementEntityConverter.toEntityId(childrenId))
+				.orElseThrow(()->new EntityNotFoundException ("could not find  children element with id: " + childrenId));
+
+		
+		parent.addChildren(children);
+		
+		this.elementDao.save(parent);
 	}
-	public void checkIfUserEmailExist(String userEmail) {
-		// TODO STUB
+	
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Set<ElementBoundary> getChildrens(String parentId,String userEmail) {
+		if(!(this.checkIfUserEmailExist(userEmail))){
+			throw new  EntityNotFoundException ("could not find any  user with  email : " + userEmail);
+		}
+		ElementEntity parent = this.elementDao
+				.findById(this.elementEntityConverter.toEntityId(parentId))
+				.orElseThrow(()->new EntityNotFoundException("could not find parent element with id: " + parentId));
+
+		return parent
+				.getChildrens()
+				.stream() 
+				.map(this.elementEntityConverter::convertFromEntity) 
+				.collect(Collectors.toSet());
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<ElementBoundary> getParents(String childrenId,String userEmail) {
+		if(!(this.checkIfUserEmailExist(userEmail))){
+			throw new  EntityNotFoundException ("could not find any  user with  email : " + userEmail);
+		}
+		
+		ElementEntity children = this.elementDao
+				.findById(this.elementEntityConverter.toEntityId(childrenId))
+				.orElseThrow(()->new EntityNotFoundException ("could not find  element with id: " + childrenId));
+		
+		return children
+				.getParents()
+				.stream() 
+				.map(this.elementEntityConverter::convertFromEntity) //
+				.collect(Collectors.toSet());
+	}
+	
+	public Boolean checkIfManagerEmailExist(String adminEmail) {
+		return true;// TODO STUB
+	}
+	public Boolean checkIfUserEmailExist(String userEmail) {
+		return true; // TODO STUB	
+		}
 
 }

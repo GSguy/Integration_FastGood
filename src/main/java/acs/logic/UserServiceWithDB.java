@@ -45,7 +45,10 @@ public class UserServiceWithDB implements UserService {
 	@Transactional //(readOnly = false)
 	public UserBoundary createUser(UserBoundary user) {
 		UserEntity entity = this.userConverter.toEntity(user);
-		
+		if(entity.getEmail()==null) {
+	    	throw new EntityNotFoundException("could not create new user without  email:" );
+
+		}
 		// Guy: i'm not sure that we need this "if" check, for now.
 		//if(entity.getAvatar()!=null && entity.getEmail()!=null && entity.getRole()!=null && entity.getUsername()!=null) { //Check if all fields are valid
 			entity = this.userDao.save(entity); // UPSERT:  SELECT  -> UPDATE / INSERT
@@ -81,7 +84,6 @@ public class UserServiceWithDB implements UserService {
 	@Override
 	@Transactional //(readOnly = false)
 	public UserBoundary updateUser(String userEmail, UserBoundary update) {
-		
 		UserBoundary existing = this.getUser(userEmail);
 		
 		if(update.getAvatar()!=null) {

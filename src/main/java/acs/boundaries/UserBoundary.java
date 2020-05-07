@@ -9,6 +9,7 @@ public class UserBoundary {
 	private String username;
 	private String avatar;
 	 
+	
 	public UserBoundary() {
 		 super();
 

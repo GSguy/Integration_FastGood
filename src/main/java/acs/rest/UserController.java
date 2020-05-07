@@ -44,7 +44,7 @@ public class UserController {
 	@RequestMapping(path = "/acs/users/{userEmail}",
 			method = RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void update (
+	public void updateUser (
 			@PathVariable("userEmail") String userEmail, 
 			@RequestBody UserBoundary update) {
         this.userService.updateUser(userEmail, update);
