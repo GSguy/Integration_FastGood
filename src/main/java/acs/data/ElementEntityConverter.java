@@ -58,7 +58,11 @@ public class ElementEntityConverter {
 		entity.setCreatedTimeStamp(boundary.getCreatedTimeStamp());
 		entity.setElementId(this.toEntityId(boundary.getElementId()));
 		entity.setLocation(boundary.getLocation());
+		
+		if (boundary.getName() == null) throw new RuntimeException("Element Name Cannot be null");
 		entity.setName(boundary.getName());
+		
+		if (boundary.getType() == null) throw new RuntimeException("Element Type Cannot be null");
 		entity.setType(boundary.getType());
 				
 		try {
