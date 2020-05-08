@@ -48,7 +48,7 @@ public class ElementServiceWithDB implements RelationalElementService {
 	public ElementBoundary create(String managerEmail, ElementBoundary newElement) {
 		this.checkIfManagerEmailExist(managerEmail); // TODO complete this check
 		
-		newElement.getCreatedBy().put("managerEmail", managerEmail); // TODO  why we need setCreatedBy
+		newElement.getCreatedBy().put("email", managerEmail); // TODO  why we need setCreatedBy
 		ElementEntity entity = this.elementEntityConverter.toEntity(newElement);
 		
 		String newId = UUID.randomUUID().toString();

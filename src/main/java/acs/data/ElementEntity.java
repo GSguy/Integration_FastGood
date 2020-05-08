@@ -36,7 +36,7 @@ public class ElementEntity {
     private String type;
     private String name;
     private Boolean active;
-    private Date createdTimeStamp;
+    private Date createdTimestamp;
     private String createdBy; // MAP->String
     private Location location;
     private String elementAttributes; // MAP->String
@@ -68,11 +68,11 @@ public class ElementEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimeStamp() {
-		return createdTimeStamp;
+		return createdTimestamp;
 	}
 
 	public void setCreatedTimeStamp(Date createdTimeStamp) {
-		this.createdTimeStamp = createdTimeStamp;
+		this.createdTimestamp = createdTimeStamp;
 	}
 
 	@Lob

@@ -20,8 +20,8 @@ public class ActionEntityConverter {
 	
 	public ActionBoundary convertFromEntity (ActionEntity entity) {
 		ActionBoundary boundary = new ActionBoundary();
-		boundary.setCreatedTimeStamp(entity.getCreatedTimeStamp());
-		boundary.setActionID(this.fromEntityId(entity.getActionID()));
+		boundary.setCreatedTimestamp(entity.getCreatedTimeStamp());
+		boundary.setActionId(this.fromEntityId(entity.getActionID()));
 		
 		boundary.setType(entity.getType());
 
@@ -66,13 +66,14 @@ public class ActionEntityConverter {
 	public ActionEntity toEntity (ActionBoundary boundary) {
 		ActionEntity entity = new ActionEntity();
 		
-		entity.setActionID(this.toEntityId(boundary.getActionID()));
-		entity.setCreatedTimeStamp(boundary.getCreatedTimeStamp());
+		entity.setActionID(this.toEntityId(boundary.getActionId()));
+		entity.setCreatedTimeStamp(boundary.getCreatedTimestamp());
 		
 		if (boundary.getType() == null) throw new RuntimeException("Action Type Cannot be null");
 		entity.setType(boundary.getType());
 				
 		// marshalling
+		if (boundary.getActionAttributes().size() == 0) throw new RuntimeException("Action Attributes Cannot be empty");
 		try {
 			entity.setActionAttributes(
 					this.jackson
