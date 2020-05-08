@@ -1,6 +1,8 @@
 package acs;
 
 import acs.boundaries.ElementBoundary;
+import acs.boundaries.UserBoundary;
+import acs.data.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ElementControllerTests {
@@ -32,6 +36,7 @@ class ElementControllerTests {
 	public void setup() {
 		this.url = "http://localhost:" + port + "/acs/elements";
 	}
+
 
 	@Test
 	public void testPostMessageReturnsMessageDetailsInResponse() throws Exception {
@@ -129,7 +134,60 @@ class ElementControllerTests {
 						"1",
 						"test4");
 	}
+	@Test
+	public void testCreateElementWithNullName() throws  Exception{
+		// GIVEN server is running properly
+		// AND I create user with invalid Element name  as 'null'
+		// WHEN I POST /acs/elements/{managerEmail} with a new message
+		// THEN the server responds with expected exception
+
+		Exception exception = assertThrows(RuntimeException.class, () -> {
+			ElementBoundary messageToPost
+					= new ElementBoundary();
+			messageToPost.setActive(true);
+
+			ElementBoundary responseFromServer =
+					this.restTemplate
+							.postForObject(
+									this.url + "/{managerEmail}",
+									messageToPost,
+									ElementBoundary.class, "xx@xx.com");
 
 
+		});
+
+		String expectedMessage = "Element Name Cannot be null";
+		String actualMessage = exception.getMessage();
+
+		assertTrue(actualMessage.contains(expectedMessage));
+	}
+	@Test
+	public void testCreateElementWithNullElementType() throws  Exception{
+		// GIVEN server is running properly
+		// AND I create user with invalid Element Type  as 'null'
+		// WHEN I POST /acs/elements/{managerEmail} with a new message
+		// THEN the server responds with expected exception
+
+		Exception exception = assertThrows(RuntimeException.class, () -> {
+			ElementBoundary messageToPost
+					= new ElementBoundary();
+			messageToPost.setActive(true);
+			messageToPost.setName("test");
+
+			ElementBoundary responseFromServer =
+					this.restTemplate
+							.postForObject(
+									this.url + "/{managerEmail}",
+									messageToPost,
+									ElementBoundary.class, "xx@xx.com");
+
+
+		});
+
+		String expectedMessage = "Element Type Cannot be null";
+		String actualMessage = exception.getMessage();
+
+		assertTrue(actualMessage.contains(expectedMessage));
+	}
 }
 

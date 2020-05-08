@@ -147,7 +147,7 @@ public class AdminControllerTests {
         assertThat(responseFromServer).isEmpty();
     }
 
-      @Test
+    @Test
     public void testDeleteAllActionsWithOneElementCreationForTesting() throws  Exception{
           // GIVEN server is up
           // do nothing
