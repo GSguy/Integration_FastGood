@@ -23,7 +23,7 @@ public class ElementEntityConverter {
 		ElementBoundary boundary = new ElementBoundary();
 		
 		boundary.setActive(entity.getActive());
-		boundary.setCreatedTimeStamp(entity.getCreatedTimeStamp());
+		boundary.setCreatedTimestamp(entity.getCreatedTimeStamp());
 		boundary.setElementId(this.fromEntityId(entity.getElementId()));
 		boundary.setLocation(entity.getLocation());
 		boundary.setName(entity.getName());
@@ -39,6 +39,8 @@ public class ElementEntityConverter {
 			throw new RuntimeException(e);
 		}
 		
+		
+		if (boundary.getElementAttributes().size() == 0) throw new RuntimeException("Element Attributes Cannot be empty");
 		try {
 			boundary.setElementAttributes(
 					this.jackson.readValue(
