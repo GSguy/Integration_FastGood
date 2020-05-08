@@ -33,17 +33,18 @@ public class UserEntityConverter {
 		{
 			type = UserRole.valueOf(user.getRole().name().toUpperCase());
 		}
-		
-		if( type != null && type == UserRole.ADMIN || type==UserRole.MANAGER || type==UserRole.PLAYER ) {
-			entity.setRole(UserRole.valueOf(user.getRole().name().toUpperCase()));
-		}
-		
-		if(user.getAvatar()!=null) {
+		else throw new RuntimeException("User Role Cannot be null");
+
+		if(user.getAvatar()!=null && user.getAvatar()!="" ) {
 			entity.setAvatar(user.getAvatar());
 		}
+		else throw new RuntimeException("Avatar Cannot be null or empty");
+		
 		if(user.getUsername()!=null) {
 			entity.setUsername(user.getUsername());
 		}
+		else throw new RuntimeException("User Name Cannot be null");
+		
 		return entity;
 		
 	}

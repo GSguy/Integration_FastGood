@@ -12,6 +12,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,10 +48,17 @@ public class UserServiceWithDB implements UserService {
 	@Transactional //(readOnly = false)
 	public UserBoundary createUser(UserBoundary user) {
 		UserEntity entity = this.userConverter.toEntity(user);
+		
+		// Check if User Email exist
 		if(entity.getEmail()==null) {
 	    	throw new EntityNotFoundException("could not create new user without  email:" );
-
 		}
+		// ValidEmailAddress
+		if (!(isValidEmailAddress(entity.getEmail()))) {
+			throw new RuntimeException("User Email is not valid");
+		}
+	
+		
 		// Guy: i'm not sure that we need this "if" check, for now.
 		//if(entity.getAvatar()!=null && entity.getEmail()!=null && entity.getRole()!=null && entity.getUsername()!=null) { //Check if all fields are valid
 			entity = this.userDao.save(entity); // UPSERT:  SELECT  -> UPDATE / INSERT
@@ -126,5 +136,18 @@ public class UserServiceWithDB implements UserService {
 	public void deleteAllUsers(String adminEmail) {
 		this.userDao.deleteAll();
 	}
+	
+	// Using the official java email package - https://javaee.github.io/javamail/
+	public static boolean isValidEmailAddress(String email) {
+		   boolean result = true;
+		   try {
+		      InternetAddress emailAddr = new InternetAddress(email);
+		      emailAddr.validate();
+		   } catch (AddressException ex) {
+		      result = false;
+		   }
+		   return result;
+		}
+	
 	
 }

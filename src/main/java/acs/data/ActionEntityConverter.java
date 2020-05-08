@@ -22,6 +22,7 @@ public class ActionEntityConverter {
 		ActionBoundary boundary = new ActionBoundary();
 		boundary.setCreatedTimeStamp(entity.getCreatedTimeStamp());
 		boundary.setActionID(this.fromEntityId(entity.getActionID()));
+		
 		boundary.setType(entity.getType());
 
 		// unmarshalling
@@ -67,6 +68,8 @@ public class ActionEntityConverter {
 		
 		entity.setActionID(this.toEntityId(boundary.getActionID()));
 		entity.setCreatedTimeStamp(boundary.getCreatedTimeStamp());
+		
+		if (boundary.getType() == null) throw new RuntimeException("Action Type Cannot be null");
 		entity.setType(boundary.getType());
 				
 		// marshalling
@@ -79,6 +82,7 @@ public class ActionEntityConverter {
 			throw new RuntimeException(e);
 		}
 		
+		if (boundary.getElement().size() == 0) throw new RuntimeException("Action element Cannot be empty");
 		// marshalling
 		try {
 			entity.setElement(
@@ -89,6 +93,7 @@ public class ActionEntityConverter {
 			throw new RuntimeException(e);
 		}
 		
+		if (boundary.getInvokedBy().size() == 0) throw new RuntimeException("Action invokedBy Cannot be empty");
 		// marshalling
 		try {
 			entity.setInvokedBy(
