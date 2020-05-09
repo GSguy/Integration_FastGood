@@ -96,5 +96,30 @@ public class ActionControllerTests {
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
+    @Test
+    public void testCreateActionProperly() throws  Exception{
+            // GIVEN server is running properly
+            // AND I create ActionBoundary object and assign attributes
+            // WHEN I POST /actions with a new message 'messageToPost'
+            // THEN the server responds with expected 'type' and 'actionAttributes'
 
+            ActionBoundary messageToPost = new ActionBoundary();
+            HashMap testMap=new HashMap<String,Object>();
+            testMap.put("1","1");
+            messageToPost.setActionAttributes(testMap);
+            messageToPost.setElement(testMap);
+            messageToPost.setInvokedBy(testMap);
+            messageToPost.setType("someType");
+
+            ActionBoundary responseFromServer =
+                        this.restTemplate
+                                .postForObject(
+                                        this.url + "/actions",
+                                        messageToPost,
+                                        ActionBoundary.class);
+        assertThat(responseFromServer)
+                .isEqualToComparingOnlyGivenFields(messageToPost,
+                        "type","actionAttributes");
+
+    }
 }
