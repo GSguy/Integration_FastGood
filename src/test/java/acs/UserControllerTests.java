@@ -1,10 +1,7 @@
 package acs;
 
-import acs.boundaries.ElementBoundary;
 import acs.boundaries.UserBoundary;
 import acs.data.UserRole;
-import acs.logic.EntityNotFoundException;
-import org.apache.catalina.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -105,7 +101,6 @@ public class UserControllerTests {
                         UserRole.PLAYER,
                         "omer",
                         "someAvatar");
-
 
     }
 }

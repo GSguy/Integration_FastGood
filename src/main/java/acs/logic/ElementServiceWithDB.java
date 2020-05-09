@@ -2,27 +2,20 @@ package acs.logic;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.Set;
-
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import acs.boundaries.ElementBoundary;
-import acs.dal.ActionDao;
 import acs.dal.ElementDao;
+import acs.dal.LastIdValue;
+import acs.dal.LastValueDao;
 import acs.data.ElementEntity;
 import acs.data.ElementEntityConverter;
 
@@ -31,10 +24,12 @@ public class ElementServiceWithDB implements RelationalElementService {
 	
 	private ElementDao elementDao; // DAO = Data Access Object 
 	private ElementEntityConverter elementEntityConverter;
+	private LastValueDao lastValueDao;
 	
 	@Autowired
-	public ElementServiceWithDB(ElementDao elementDao) {
+	public ElementServiceWithDB(ElementDao elementDao, LastValueDao lastValueDao) {
 		this.elementDao = elementDao;
+		this.lastValueDao = lastValueDao;
 	}
 	
 	@Autowired
@@ -51,10 +46,13 @@ public class ElementServiceWithDB implements RelationalElementService {
 		newElement.getCreatedBy().put("email", managerEmail); // TODO  why we need setCreatedBy
 		ElementEntity entity = this.elementEntityConverter.toEntity(newElement);
 		
-		String newId = UUID.randomUUID().toString();
+		// create new tupple in the idValue table with a non-used id
+		LastIdValue idValue = this.lastValueDao.save(new LastIdValue());
 
+		entity.setElementId(idValue.getLastId()); // use newly generated id
+		this.lastValueDao.delete(idValue); // cleanup redundant data
+		
 		entity.setCreatedTimeStamp(new Date());
-		entity.setElementId(newId);
 		
 		entity = this.elementDao.save(entity); // UPSERT:  SELECT  -> UPDATE / INSERT
 		
@@ -67,27 +65,21 @@ public class ElementServiceWithDB implements RelationalElementService {
 		this.checkIfManagerEmailExist(mangerEmail);
 		
 		ElementBoundary existeElement = this.getSpecificElement(mangerEmail, elementid);
-		boolean dirty = false;
 		
 		if(update.getActive() != null) {
 			existeElement.setActive(update.getActive());
-			dirty = true;
 		}
 		if(update.getElementAttributes() != null) {
 			existeElement.setElementAttributes(update.getElementAttributes());
-			dirty = true;
 		}
 		if(update.getLocation() != null) {
 			existeElement.setLocation(update.getLocation());
-			dirty = true;
 		}
 		if(update.getName() != null) {
 			existeElement.setName(update.getName());
-			dirty = true;
 		}
 		if(update.getType() != null) {
 			existeElement.setType(update.getType());
-			dirty = true;
 		}
 		
 		this.elementDao.save(this.elementEntityConverter.toEntity(existeElement));
@@ -120,7 +112,7 @@ public class ElementServiceWithDB implements RelationalElementService {
 		this.checkIfUserEmailExist(userEmail); // TODO check why this is userEmail and not adminEmail
 		
 		// SELECT * FROM MESSAGES WHERE ID=? 
-		Optional<ElementEntity> entity = this.elementDao.findById(elementId);
+		Optional<ElementEntity> entity = this.elementDao.findById(Long.parseLong(elementId));
 		
 		if (entity.isPresent()) {
 			return this.elementEntityConverter.convertFromEntity(entity.get());
@@ -146,11 +138,11 @@ public class ElementServiceWithDB implements RelationalElementService {
 		}
 		
 		ElementEntity parent = this.elementDao
-			.findById(this.elementEntityConverter.toEntityId(parentId))
+			.findById(Long.parseLong(this.elementEntityConverter.toEntityId(parentId)))
 			.orElseThrow(()->new EntityNotFoundException("could not find parent element with id: " + parentId));
 
 		ElementEntity children = this.elementDao
-				.findById(this.elementEntityConverter.toEntityId(childrenId))
+				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(childrenId)))
 				.orElseThrow(()->new EntityNotFoundException ("could not find  children element with id: " + childrenId));
 
 		
@@ -165,7 +157,7 @@ public class ElementServiceWithDB implements RelationalElementService {
 	public Set<ElementBoundary> getChildrens(String parentId,String userEmail) {
 		this.checkIfUserEmailExist(userEmail);
 		ElementEntity parent = this.elementDao
-				.findById(this.elementEntityConverter.toEntityId(parentId))
+				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(parentId)))
 				.orElseThrow(()->new EntityNotFoundException("could not find parent element with id: " + parentId));
 
 		return parent
@@ -180,7 +172,7 @@ public class ElementServiceWithDB implements RelationalElementService {
 	public Collection<ElementBoundary> getParents(String childrenId,String userEmail) {
 		this.checkIfUserEmailExist(userEmail);
 		ElementEntity children = this.elementDao
-				.findById(this.elementEntityConverter.toEntityId(childrenId))
+				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(childrenId)))
 				.orElseThrow(()->new EntityNotFoundException ("could not find  element with id: " + childrenId));
 		
 		return children

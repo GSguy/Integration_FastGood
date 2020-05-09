@@ -2,7 +2,6 @@ package acs.data;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Embedded;
@@ -32,7 +31,7 @@ public class ElementEntity {
     private Map<String,Object> elementAttributes;
 	 */
 	
-    private String elementId;
+    private Long elementId;
     private String type;
     private String name;
     private Boolean active;
@@ -111,11 +110,11 @@ public class ElementEntity {
 	}
 
 	@Id
-	public String getElementId() {
+	public Long getElementId() {
 		return elementId;
 	}
 
-	public void setElementId(String elementId) {
+	public void setElementId(Long elementId) {
 		this.elementId = elementId;
 	}
 	

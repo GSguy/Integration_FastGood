@@ -1,8 +1,6 @@
 package acs.data;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 //JPA imports:
 import javax.persistence.Entity;
@@ -25,7 +23,7 @@ public class ActionEntity {
     private Map<String,Object> actionAttributes;
 	 */
 	
-	private String actionID;
+	private Long actionID;
 	private String type;
 	private String element; // Map -> String
 	private Date createdTimeStamp;
@@ -64,11 +62,11 @@ public class ActionEntity {
 	}
 
 	@Id
-	public String getActionID() {
+	public Long getActionID() {
 		return actionID;
 	}
 
-	public void setActionID(String actionID) {
+	public void setActionID(Long actionID) {
 		this.actionID = actionID;
 	}
 	

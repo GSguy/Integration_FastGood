@@ -21,10 +21,13 @@ public class ActionEntityConverter {
 	public ActionBoundary convertFromEntity (ActionEntity entity) {
 		ActionBoundary boundary = new ActionBoundary();
 		boundary.setCreatedTimestamp(entity.getCreatedTimeStamp());
-		boundary.setActionId(this.fromEntityId(entity.getActionID()));
-		
 		boundary.setType(entity.getType());
-
+		
+		if (entity.getActionID() != null)
+			boundary.setActionId(this.fromEntityId(entity.getActionID().toString()));
+		else
+			boundary.setActionId(null);
+	
 		// unmarshalling
 		try {
 			boundary.setActionAttributes(
@@ -66,8 +69,12 @@ public class ActionEntityConverter {
 	public ActionEntity toEntity (ActionBoundary boundary) {
 		ActionEntity entity = new ActionEntity();
 		
-		entity.setActionID(this.toEntityId(boundary.getActionId()));
 		entity.setCreatedTimeStamp(boundary.getCreatedTimestamp());
+		
+		if(boundary.getActionId()!=null)
+			entity.setActionID(Long.parseLong(this.toEntityId(boundary.getActionId())));
+		else
+			entity.setActionID(null);
 		
 		if (boundary.getType() == null) throw new RuntimeException("Action Type Cannot be null");
 		entity.setType(boundary.getType());
@@ -121,7 +128,7 @@ public class ActionEntityConverter {
 	
 	public String fromEntityId(String id) {
 		if (id != null) {
-			return id.toString();
+			return id;
 		}else {
 			return null;
 		}

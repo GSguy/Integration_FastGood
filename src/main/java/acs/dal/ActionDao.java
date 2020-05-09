@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import acs.data.ActionEntity;
 
-public interface ActionDao extends CrudRepository<ActionEntity, String>{
+public interface ActionDao extends CrudRepository<ActionEntity, Long>{
 
 }

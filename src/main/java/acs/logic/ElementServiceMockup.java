@@ -1,11 +1,9 @@
 package acs.logic;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -13,7 +11,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import acs.boundaries.ElementBoundary;
 import acs.data.ElementEntity;
@@ -53,7 +50,7 @@ public class ElementServiceMockup implements ElementService {
 					.toEntity(newElement);
 		
 		entity.setCreatedTimeStamp(new Date());
-		entity.setElementId(newId.toString());
+		entity.setElementId(newId);
 		
 		this.database
 			.put(newId.toString(), entity);
