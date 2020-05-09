@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import acs.boundaries.ActionBoundary;
 import acs.data.ActionEntity;
@@ -46,9 +44,9 @@ public class ActionServicesMockup implements ActionService {
 		ActionEntity entity = this.actionEntityConverter.toEntity(action);
 		// set Server fields
 		nextId.incrementAndGet();
-		entity.setActionID(nextId.toString()); //create new ID - Not consider user ID INPUT
+		entity.setActionID(Long.parseLong(nextId.toString())); //create new ID - Not consider user ID INPUT
 		entity.setCreatedTimeStamp( entity.getCreatedTimeStamp() != null ? entity.getCreatedTimeStamp() : new Date() );
-		this.database.put(entity.getActionID(), entity);
+		this.database.put(entity.getActionID().toString(), entity);
     	return this.actionEntityConverter.convertFromEntity(entity);
 	}
 

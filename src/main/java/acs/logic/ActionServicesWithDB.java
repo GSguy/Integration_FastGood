@@ -1,17 +1,8 @@
 package acs.logic;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import acs.boundaries.ActionBoundary;
 import acs.dal.ActionDao;
+import acs.dal.LastIdValue;
+import acs.dal.LastValueDao;
 import acs.data.ActionEntity;
 import acs.data.ActionEntityConverter;
 
@@ -27,10 +20,12 @@ public class ActionServicesWithDB implements ActionService {
 
 	private ActionDao actionDao; // DAO = Data Access Object 
 	private ActionEntityConverter actionEntityConverter;
+	private LastValueDao lastValueDao;
 		
 	@Autowired
-	public ActionServicesWithDB(ActionDao actionDao) {
+	public ActionServicesWithDB(ActionDao actionDao, LastValueDao lastValueDao) {
 		this.actionDao = actionDao;
+		this.lastValueDao = lastValueDao;
 	}
 	
 	@Autowired
@@ -43,13 +38,17 @@ public class ActionServicesWithDB implements ActionService {
 	public Object invokeAction(ActionBoundary action) {
 		ActionEntity entity = this.actionEntityConverter.toEntity(action);
 		
-		String newId = UUID.randomUUID().toString();
+		// create new tupple in the idValue table with a non-used id
+		LastIdValue idValue = this.lastValueDao.save(new LastIdValue());
 		
 		// set Server fields
-		entity.setActionID(newId); //create new ID - Not consider user ID INPUT
+		entity.setActionID(idValue.getLastId()); //create new ID - Not consider user ID INPUT
+		this.lastValueDao.delete(idValue);// cleanup redundant data
+		
 		entity.setCreatedTimeStamp( entity.getCreatedTimeStamp() != null ? entity.getCreatedTimeStamp() : new Date() );
 		
 		entity = this.actionDao.save(entity); // UPSERT:  SELECT  -> UPDATE / INSERT
+		
     	return this.actionEntityConverter.convertFromEntity(entity);
 	}
 

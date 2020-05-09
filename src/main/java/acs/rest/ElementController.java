@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ElementBoundary;
 import acs.boundaries.ElementIdWrapper;
-import acs.logic.ElementService;
 import acs.logic.RelationalElementService;
 
 
@@ -78,7 +77,8 @@ public class ElementController {
 		return this.elementService.getSpecificElement(managerEmail, elementId);
 	}
 	
-	
+
+	// PUT - update content (SQL: update)
 	@RequestMapping(path = "/acs/elements/{managerEmail}/{parentElementId}/children",
 			method = RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -91,6 +91,7 @@ public class ElementController {
 	}
 	
 	
+	// GET -- > retrieve instance from system (SQL: SELECT)
 	@RequestMapping(path = "/acs/elements/{userEmail}/{parentElementId}/children",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -101,6 +102,7 @@ public class ElementController {
 	}
 	
 	
+	// GET -- > retrieve instance from system (SQL: SELECT)
 	@RequestMapping(path =  "/acs/elements/{userEmail}/{ChildElementId}/parents",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
