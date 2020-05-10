@@ -25,7 +25,7 @@ public class UserController {
 	@RequestMapping(path = "/acs/users/login/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary login (@PathVariable("userEmail") String userEmail) {
+	public UserBoundary login(@PathVariable("userEmail") String userEmail) {
 		return this.userService.login(userEmail);
 	}
 	
@@ -44,7 +44,7 @@ public class UserController {
 	@RequestMapping(path = "/acs/users/{userEmail}",
 			method = RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void updateUser (
+	public void updateUser(
 			@PathVariable("userEmail") String userEmail, 
 			@RequestBody UserBoundary update) {
         this.userService.updateUser(userEmail, update);

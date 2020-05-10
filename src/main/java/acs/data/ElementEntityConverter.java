@@ -23,8 +23,13 @@ public class ElementEntityConverter {
 		ElementBoundary boundary = new ElementBoundary();
 		
 		boundary.setActive(entity.getActive());
-		boundary.setCreatedTimeStamp(entity.getCreatedTimeStamp());
-		boundary.setElementId(this.fromEntityId(entity.getElementId()));
+		boundary.setCreatedTimestamp(entity.getCreatedTimeStamp());
+		
+		if (entity.getElementId()!=null)
+			boundary.setElementId(this.fromEntityId(entity.getElementId().toString()));
+		else
+			boundary.setElementId(null);
+		
 		boundary.setLocation(entity.getLocation());
 		boundary.setName(entity.getName());
 		boundary.setType(entity.getType());
@@ -39,6 +44,8 @@ public class ElementEntityConverter {
 			throw new RuntimeException(e);
 		}
 		
+		
+		if (boundary.getElementAttributes().size() == 0) throw new RuntimeException("Element Attributes Cannot be empty");
 		try {
 			boundary.setElementAttributes(
 					this.jackson.readValue(
@@ -56,8 +63,12 @@ public class ElementEntityConverter {
 		ElementEntity entity = new ElementEntity();
 		entity.setActive(boundary.getActive());
 		entity.setCreatedTimeStamp(boundary.getCreatedTimeStamp());
-		entity.setElementId(this.toEntityId(boundary.getElementId()));
 		entity.setLocation(boundary.getLocation());
+		
+		if (boundary.getElementId()!=null)
+			entity.setElementId(Long.parseLong(this.fromEntityId(boundary.getElementId())));
+		else
+			entity.setElementId(null);
 		
 		if (boundary.getName() == null) throw new RuntimeException("Element Name Cannot be null");
 		entity.setName(boundary.getName());

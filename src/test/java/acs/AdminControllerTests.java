@@ -49,7 +49,7 @@ public class AdminControllerTests {
         ActionBoundary newActionBoundary = new ActionBoundary();
         HashMap testMap=new HashMap<String,Object>();
         testMap.put("1","1");
-        newActionBoundary.setActionID("1");
+        newActionBoundary.setActionId("1");
         newActionBoundary.setActionAttributes(testMap);
         newActionBoundary.setElement(testMap);
         newActionBoundary.setInvokedBy(testMap);
@@ -182,14 +182,9 @@ public class AdminControllerTests {
 
 
         assertThat(responseFromServer).isEmpty();
-
-
+      
     }
 
-
-
-
-
-
-
+      
+      
 }

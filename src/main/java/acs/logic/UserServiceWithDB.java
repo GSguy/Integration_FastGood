@@ -1,27 +1,17 @@
 package acs.logic;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import acs.boundaries.UserBoundary;
-import acs.dal.ElementDao;
 import acs.dal.UserDao;
 import acs.data.*;
 
@@ -51,7 +41,7 @@ public class UserServiceWithDB implements UserService {
 		
 		// Check if User Email exist
 		if(entity.getEmail()==null) {
-	    	throw new EntityNotFoundException("could not create new user without  email:" );
+	    	throw new EntityNotFoundException("could not create new user without email" );
 		}
 		// ValidEmailAddress
 		if (!(isValidEmailAddress(entity.getEmail()))) {
@@ -148,6 +138,5 @@ public class UserServiceWithDB implements UserService {
 		   }
 		   return result;
 		}
-	
 	
 }

@@ -23,9 +23,10 @@ public class UserEntityConverter {
 		
 		UserEntity entity = new UserEntity();
 		
-		if(user.getEmail() != null) {
+		if(user.getEmail() != null) 
 			entity.setEmail(user.getEmail());
-		}
+		else
+			entity.setEmail(null);
 		
 		UserRole type = null;
 		
@@ -51,7 +52,12 @@ public class UserEntityConverter {
 	public UserBoundary convertFromEntity(UserEntity user) {
 	UserBoundary boundary=new UserBoundary();
 
-	    boundary.setEmail(user.getEmail());
+	    if (user.getEmail() != null)
+	    	boundary.setEmail(user.getEmail());
+	    else
+	    	boundary.setEmail(null);
+	    
+	    
 	    boundary.setAvatar(user.getAvatar());
 	    boundary.setUsername(user.getUsername());
 	    if(user.getRole()!=null) {

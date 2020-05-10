@@ -6,10 +6,10 @@ import java.util.Map;
 
 public class ActionBoundary {
 	
-	private String actionID;
+	private String actionId;
 	private String type;
 	private Map<String, String> element;
-	private Date createdTimeStamp;
+	private Date createdTimestamp;
 	private Map<String, String> invokedBy;
     private Map<String,Object> actionAttributes;
     
@@ -21,12 +21,12 @@ public class ActionBoundary {
 	}
 	
 
-	public Date getCreatedTimeStamp() {
-		return createdTimeStamp;
+	public Date getCreatedTimestamp() {
+		return createdTimestamp;
 	}
 
-	public void setCreatedTimeStamp(Date createdTimeStamp) {
-		this.createdTimeStamp = createdTimeStamp;
+	public void setCreatedTimestamp(Date createdTimeStamp) {
+		this.createdTimestamp = createdTimeStamp;
 	}
 
 	public Map<String, String> getInvokedBy() {
@@ -45,12 +45,12 @@ public class ActionBoundary {
 		this.actionAttributes = actionAttributes;
 	}
 
-	public String getActionID() {
-		return actionID;
+	public String getActionId() {
+		return actionId;
 	}
 
-	public void setActionID(String actionID) {
-		this.actionID = actionID;
+	public void setActionId(String actionID) {
+		this.actionId = actionID;
 	}
 
 	public String getType() {
