@@ -12,6 +12,9 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+=======
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -61,8 +64,7 @@ public class UserControllerTests {
     @Test
     public void testGetSpecificUserWhenDBisEmpty() throws  Exception{
         // GIVEN server is up
-        // do nothing
-
+        // AND I created user with email-->omer@gmail.com
         // WHEN I GET /users/login/omer@gmail.com
         //THEN server throws EntityNotFoundException(RuntimeException)
         try {
@@ -102,5 +104,162 @@ public class UserControllerTests {
                         "omer",
                         "someAvatar");
 
+    }
+    @Test()
+    public void testCreateNewUserWithInvalidEmail() throws  Exception{
+        // GIVEN server is running properly
+        // AND I create user with invalid Email 'xxx'
+        // WHEN I POST /users with a new message
+        // THEN the server responds with expected excecption
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            UserBoundary user = new UserBoundary();
+            user.setEmail("xxx");
+            user.setAvatar("someAvatar");
+            user.setRole(UserRole.PLAYER);
+            user.setUsername("omer");
+
+            UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",user);
+
+
+            UserBoundary messageToServer =
+                    this.restTemplate
+                            .postForObject(
+                                    this.url + "users",
+                                    messageToPost,
+                                    UserBoundary.class);
+
+
+        });
+
+        String expectedMessage = "User Email is not valid";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    @Test()
+    public void testCreateNewUserWithNullUserRole() throws  Exception{
+        // GIVEN server is running properly
+        // AND I create user with invalid UserRole as 'null'
+        // WHEN I POST /users with a new message
+        // THEN the server responds with expected excecption
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            UserBoundary user = new UserBoundary();
+            user.setEmail("omerlewitz@gmail.com");
+            user.setAvatar("someAvatar");
+            user.setUsername("omer");
+
+            UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",user);
+
+
+            UserBoundary messageToServer =
+                    this.restTemplate
+                            .postForObject(
+                                    this.url + "users",
+                                    messageToPost,
+                                    UserBoundary.class);
+
+
+        });
+
+        String expectedMessage = "User Role Cannot be null";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    @Test
+    public void testCreateNewUserWithNullAvatar() throws  Exception{
+        // GIVEN server is running properly
+        // AND I create user with invalid avatar as 'null'
+        // WHEN I POST /users with a new message
+        // THEN the server responds with expected excecption
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            UserBoundary user = new UserBoundary();
+            user.setEmail("omerlewitz@gmail.com");
+            user.setRole(UserRole.PLAYER);
+            user.setUsername("omer");
+
+            UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",user);
+
+
+            UserBoundary messageToServer =
+                    this.restTemplate
+                            .postForObject(
+                                    this.url + "users",
+                                    messageToPost,
+                                    UserBoundary.class);
+
+
+        });
+
+        String expectedMessage = "Avatar Cannot be null or empty";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    @Test
+    public void testCreateNewUserWithEmptyAvatar() throws  Exception{
+        // GIVEN server is running properly
+        // AND I create user with invalid avatar as 'null'
+        // WHEN I POST /users with a new message
+        // THEN the server responds with expected excecption
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            UserBoundary user = new UserBoundary();
+            user.setEmail("omerlewitz@gmail.com");
+            user.setRole(UserRole.PLAYER);
+            user.setUsername("omer");
+            user.setAvatar("");
+
+            UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",user);
+
+
+            UserBoundary messageToServer =
+                    this.restTemplate
+                            .postForObject(
+                                    this.url + "users",
+                                    messageToPost,
+                                    UserBoundary.class);
+
+
+        });
+
+        String expectedMessage = "Avatar Cannot be null or empty";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    @Test
+    public void testCreateNewUserWithNullUserName() throws  Exception{
+        // GIVEN server is running properly
+        // AND I create user with invalid UserName as 'null'
+        // WHEN I POST /users with a new message
+        // THEN the server responds with expected excecption
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            UserBoundary user = new UserBoundary();
+            user.setEmail("omerlewitz@gmail.com");
+            user.setRole(UserRole.PLAYER);
+            user.setAvatar("address");
+
+            UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",user);
+
+
+            UserBoundary messageToServer =
+                    this.restTemplate
+                            .postForObject(
+                                    this.url + "users",
+                                    messageToPost,
+                                    UserBoundary.class);
+
+
+        });
+
+        String expectedMessage = "User Name Cannot be null";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 }

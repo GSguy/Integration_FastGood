@@ -24,10 +24,14 @@ public class AdminControllerTests {
 
     public ElementBoundary createElementMessageForTesting()
     {
-        ElementBoundary newElement
-                = new ElementBoundary("xx@xx.com", "1");
+        ElementBoundary messageToPost
+                = new ElementBoundary();
 
-      return newElement;
+        messageToPost.setName("test1");
+        messageToPost.setType("typeTest");
+
+
+        return messageToPost;
     }
 
     public ElementBoundary createPostMessageAndReturningTheMessage(ElementBoundary messageToPost)
@@ -49,6 +53,7 @@ public class AdminControllerTests {
         newActionBoundary.setActionAttributes(testMap);
         newActionBoundary.setElement(testMap);
         newActionBoundary.setInvokedBy(testMap);
+        newActionBoundary.setType("someType");
         return newActionBoundary;
     }
     public ActionBoundary createPostMessageAndReturningTheMessage(ActionBoundary messageToPost)
@@ -60,7 +65,6 @@ public class AdminControllerTests {
                                 messageToPost,
                                 ActionBoundary.class);
 
-        System.err.println(messageToPost);
 
         return  messageToServer;
     }
@@ -80,11 +84,18 @@ public class AdminControllerTests {
 
     @Test
     public void testPostMessageReturnsMessageDetailsInResponse() throws Exception{
-        // GIVEN server is up
-        // do nothing
-        // WHEN I POST /messages with a new message
+
+        // GIVEN server is run properly
+        // WHEN I POST /elements/xx@xx.com with a new message
+        // AND i insert values to ElementBoundary object with name-"test1" and type "typeTest"
+        // THEN the server responds with the same message details, except for the timestamp,elementId
+
+
         ElementBoundary messageToPost
-                = new ElementBoundary("xx@xx.com","1");
+                = new ElementBoundary();
+
+        messageToPost.setName("test1");
+        messageToPost.setType("typeTest");
 
         ElementBoundary responseFromServer =
                 this.restTemplate
@@ -93,19 +104,20 @@ public class AdminControllerTests {
                                 messageToPost,
                                 ElementBoundary.class,"xx@xx.com");
 
-        // THEN the server responds with the same message details, except for the timestamp and the id
-        // cleanup - delete all messages from database
+
         assertThat(responseFromServer)
                 .isEqualToComparingOnlyGivenFields(messageToPost,
-                        "elementId");
+                        "name","type");
     }
     @Test
     // DELETE - delete all elements content (SQL: delete)
     public void testDeleteAllElementWithOneElementCreationForTesting() throws  Exception{
-        // GIVEN server is up
+
+        // GIVEN server is run properly
         // do nothing
         // WHEN I DELETE /admin/elements/xx@xx.com
-        //THEN Database is empty
+        // THEN Database is empty
+
         ElementBoundary elementForTesting=createElementMessageForTesting();
 
         ElementBoundary messageToServer=createPostMessageAndReturningTheMessage(elementForTesting);
@@ -126,7 +138,7 @@ public class AdminControllerTests {
     @Test
     // DELETE - delete all users content (SQL: delete)
     public void testDeleteAllUsersWithOneElementCreationForTesting() throws  Exception{
-        // GIVEN server is up
+        // GIVEN server is run properly
         // do nothing
         // WHEN I DELETE admin/users/{managerEmail}
         //THEN Database is empty
@@ -147,12 +159,12 @@ public class AdminControllerTests {
         assertThat(responseFromServer).isEmpty();
     }
 
-      @Test
+    @Test
     public void testDeleteAllActionsWithOneElementCreationForTesting() throws  Exception{
-          // GIVEN server is up
+          // GIVEN server is run properly
           // do nothing
           // WHEN I DELETE /actions
-          //THEN Database is empty
+          // THEN Database is empty
         ActionBoundary elementForTesting=createActionMessageForTesting();
 
         ActionBoundary messageToServer=createPostMessageAndReturningTheMessage(elementForTesting);

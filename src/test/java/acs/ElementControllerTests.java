@@ -1,6 +1,9 @@
 package acs;
 
 import acs.boundaries.ElementBoundary;
+import acs.boundaries.UserBoundary;
+import acs.data.UserRole;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ElementControllerTests {
@@ -25,6 +30,7 @@ class ElementControllerTests {
 
 	@PostConstruct
 	public void init() {
+		//this.url = "http://localhost:" + port + "/acs/elements";
 		this.restTemplate = new RestTemplate();
 	}
 
@@ -33,88 +39,111 @@ class ElementControllerTests {
 		this.url = "http://localhost:" + port + "/acs/elements";
 	}
 
+//	@AfterEach
+//	public void teardown() {
+//		this.restTemplate
+//				.delete(this.url);
+//	}
+
+
 	@Test
 	public void testPostMessageReturnsMessageDetailsInResponse() throws Exception {
-		// GIVEN server is up
-		// do nothing
-		// WHEN I POST /elements/xx@xx.com with a new message
-		ElementBoundary messageToPost
-				= new ElementBoundary("xx@xx.com", "2");
+		// GIVEN server is run properly
+		// WHEN I POST /elements/omer@gmail.com with a new message
+		// AND i insert values to ElementBoundary object with name-"test1" and type "typeTest"
+		// THEN the server responds with the same message details, except for the timestamp
 
+		ElementBoundary messageToPost
+				= new ElementBoundary();
+		messageToPost.setName("test1");
+		messageToPost.setType("typeTest");
 		ElementBoundary responseFromServer =
 				this.restTemplate
 						.postForObject(
 								this.url + "/{managerEmail}",
 								messageToPost,
-								ElementBoundary.class, "xx@xx.com");
+								ElementBoundary.class, "omer@gmail.com");
 
-		// THEN the server responds with the same message details, except for the timestamp
 		assertThat(responseFromServer)
 				.isEqualToComparingOnlyGivenFields(messageToPost,
-						"elementId");
+						"name","type");
 	}
 
 	@Test
 	public void testGetAllElementsOnServerInitReturnsEmptyArray() throws Exception {
-		// GIVEN server is up
+
+		// GIVEN server is run properly
 		// do nothing
-		// WHEN I GET elements/xx@xx.com with a new message
+		// WHEN I GET elements/omer@gmail.com with a new message
+		// THEN the server responds with empty array
+
 		ElementBoundary[] responseFromServer =
 				this.restTemplate
 						.getForObject(
 								this.url + "/{managerEmail}",
 								ElementBoundary[].class,
-								"xx@xx.com");
-		// THEN the server responds with empty array
+								"omer@gmail.com");
+
 		assertThat(responseFromServer).isEmpty();
 
 	}
 
 	@Test
 	public void testGetElementsWithEmailAndIdy() throws Exception {
-		// GIVEN server is up
-		// do nothing
-		// WHEN I GET elements/xx@xx.com with a new message
+
+		// GIVEN server is run properly
+		// WHEN I POST /elements/omer@gmail.com with a new message
+		// AND I insert values to ElementBoundary object with name "test1",type "typeTest",elementID "1"
+		// THEN the server responds with the same message details, except for the timestamp
+
 		ElementBoundary messageToPost
-				= new ElementBoundary("xx@xx.com", "1");
+				= new ElementBoundary();
+
+		messageToPost.setName("test1");
+		messageToPost.setType("typeTest");
 
 		ElementBoundary responseFromServer =
 				this.restTemplate
 						.postForObject(
 								this.url + "/{managerEmail}",
 								messageToPost,
-								ElementBoundary.class, "xx@xx.com");
+								ElementBoundary.class, "omer@gmail.com");
 
-		// THEN the server responds with the same message details, except for the timestamp
 		assertThat(responseFromServer)
 				.isEqualToComparingOnlyGivenFields(messageToPost,
-						"elementId");
+						"name","type");
 
 	}
 
-	@Test
+	//@Test
 	public void testUpdatingElementsWithEmailAndIdy() throws Exception {
-
-		ElementBoundary messageToPost
-				= new ElementBoundary("xx@xx.com", "1");
-
-		ElementBoundary responseFromServer =
-				this.restTemplate
-						.postForObject(
-								this.url + "/{managerEmail}",
-								messageToPost,
-								ElementBoundary.class, "xx@xx.com");
 
 		// GIVEN server is up
 		// do nothing
 		// WHEN I PUT /{managerEmail}/{elementId} with a new message
 		// WITH responseFromServer.setName("test4");
+
+		ElementBoundary messageToPost
+				= new ElementBoundary();
+
+		messageToPost.setName("test4");
+		messageToPost.setType("someType");
+
+		ElementBoundary responseFromServer =
+				this.restTemplate
+						.postForObject(
+								this.url + "/{managerEmail}",
+								messageToPost,
+								ElementBoundary.class, "omer@gmail.com");
+
+
 		responseFromServer.setName("test4");
+		responseFromServer.setType("someType");
 
 		this.restTemplate
 				.put(this.url + "/{managerEmail}/{elementId}",
 						responseFromServer,
-						"xx@xx.com", "1");
+						"omer@gmail.com", "1");
 
 		// THEN the PUT operation is responded with status 2xx
 		// AND the database is updated
@@ -129,7 +158,61 @@ class ElementControllerTests {
 						"1",
 						"test4");
 	}
+	@Test
+	public void testCreateElementWithNullName() throws  Exception{
+		// GIVEN server is running properly
+		// AND I create user with invalid Element name  as 'null'
+		// WHEN I POST /acs/elements/{managerEmail} with a new message
+		// THEN the server responds with expected exception
+
+		Exception exception = assertThrows(RuntimeException.class, () -> {
+			ElementBoundary messageToPost
+					= new ElementBoundary();
+			messageToPost.setActive(true);
+
+			ElementBoundary responseFromServer =
+					this.restTemplate
+							.postForObject(
+									this.url + "/{managerEmail}",
+									messageToPost,
+									ElementBoundary.class, "xx@xx.com");
 
 
+		});
+
+		String expectedMessage = "Element Name Cannot be null";
+		String actualMessage = exception.getMessage();
+
+		assertTrue(actualMessage.contains(expectedMessage));
+	}
+	@Test
+	public void testCreateElementWithNullElementType() throws  Exception{
+
+		// GIVEN server is running properly
+		// AND I create user with invalid Element Type  as 'null'
+		// WHEN I POST /acs/elements/{managerEmail} with a new message
+		// THEN the server responds with expected exception
+
+		Exception exception = assertThrows(RuntimeException.class, () -> {
+			ElementBoundary messageToPost
+					= new ElementBoundary();
+			messageToPost.setActive(true);
+			messageToPost.setName("test");
+
+			ElementBoundary responseFromServer =
+					this.restTemplate
+							.postForObject(
+									this.url + "/{managerEmail}",
+									messageToPost,
+									ElementBoundary.class, "xx@xx.com");
+
+
+		});
+
+		String expectedMessage = "Element Type Cannot be null";
+		String actualMessage = exception.getMessage();
+
+		assertTrue(actualMessage.contains(expectedMessage));
+	}
 }
 
