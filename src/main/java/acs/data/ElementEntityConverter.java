@@ -33,7 +33,7 @@ public class ElementEntityConverter {
 		boundary.setLocation(entity.getLocation());
 		boundary.setName(entity.getName());
 		boundary.setType(entity.getType());
-		
+
 		try {
 			boundary.setCreatedBy(
 					this.jackson.readValue(
@@ -43,9 +43,9 @@ public class ElementEntityConverter {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		
-		
-		if (boundary.getElementAttributes().size() == 0) throw new RuntimeException("Element Attributes Cannot be empty");
+
+		//Guy&Omer: we think that check not necessary => Eyal
+		//if (entity.getElementAttributes().size() == 0) throw new RuntimeException("Element Attributes Cannot be empty");
 		try {
 			boundary.setElementAttributes(
 					this.jackson.readValue(
@@ -83,7 +83,8 @@ public class ElementEntityConverter {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		
+
+		if (boundary.getElementAttributes().size() == 0) throw new RuntimeException("Element Attributes Cannot be empty");
 		try {
 			entity.setElementAttributes(
 					this.jackson.writeValueAsString(boundary.getElementAttributes()));

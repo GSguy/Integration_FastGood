@@ -60,6 +60,7 @@ public class UserEntityConverter {
 	    
 	    boundary.setAvatar(user.getAvatar());
 	    boundary.setUsername(user.getUsername());
+
 	    if(user.getRole()!=null) {
 	    	boundary.setRole(UserRole.valueOf(user.getRole().name().toUpperCase()));
 	    }

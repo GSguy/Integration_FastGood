@@ -14,7 +14,6 @@ import javax.annotation.PostConstruct;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-=======
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -43,7 +42,7 @@ public class UserControllerTests {
     public UserBoundary createUserMessageForTesting()
     {
         UserBoundary user = new UserBoundary();
-        user.setEmail("xxx");
+        user.setEmail("omerlewitz@gmail.com");
         user.setAvatar("someAvatar");
         user.setRole(UserRole.PLAYER);
         user.setUsername("omer");
@@ -84,14 +83,14 @@ public class UserControllerTests {
         // do nothing
         // WHEN I POST /users with a new message
 
-        UserBoundary  createUser= createUserMessageForTesting();
+        UserBoundary  createUser = createUserMessageForTesting();
         UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",createUser);
 
 
         // THEN the server responds with the same message details
         assertThat(this.restTemplate
                 .getForObject(
-                        this.url + "users/login/xxx", UserBoundary.class,messageToPost.getEmail(),messageToPost.getRole(),messageToPost.getUsername(), messageToPost.getAvatar()))
+                        this.url + "users/login/omerlewitz@gmail.com", UserBoundary.class,messageToPost.getEmail(),messageToPost.getRole(),messageToPost.getUsername(), messageToPost.getAvatar()))
                 .extracting(
                         "email",
                         "role",
@@ -99,8 +98,8 @@ public class UserControllerTests {
                         "avatar"
                 )
                 .containsExactly(
-                        "xxx",
-                        UserRole.PLAYER,
+                        "omerlewitz@gmail.com",
+                        UserRole.PLAYER.name().toUpperCase(),
                         "omer",
                         "someAvatar");
 

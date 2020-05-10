@@ -49,9 +49,13 @@ public class ActionControllerTests {
         Exception exception = assertThrows(RuntimeException.class, () -> {
             ActionBoundary messageToPost = new ActionBoundary();
             HashMap testMap=new HashMap<String,String>();
+            HashMap testMap2=new HashMap<String,Object>();
+            messageToPost.setActionAttributes(testMap2);
+            testMap2.put("sdfsf","asdfasdf");
             testMap.put("elementID","1");
             messageToPost.setType("type1");
             messageToPost.setElement(testMap );
+
 
             ElementBoundary responseFromServer =
                     this.restTemplate
@@ -78,6 +82,9 @@ public class ActionControllerTests {
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
             ActionBoundary messageToPost = new ActionBoundary();
+            HashMap testMap2=new HashMap<String,Object>();
+            messageToPost.setActionAttributes(testMap2);
+            testMap2.put("sdfsf","asdfasdf");
             messageToPost.setType("type1");
 
 
@@ -106,7 +113,9 @@ public class ActionControllerTests {
             ActionBoundary messageToPost = new ActionBoundary();
             HashMap testMap=new HashMap<String,Object>();
             testMap.put("1","1");
-            messageToPost.setActionAttributes(testMap);
+            HashMap testMap2=new HashMap<String,Object>();
+            messageToPost.setActionAttributes(testMap2);
+            testMap2.put("sdfsf","asdfasdf");
             messageToPost.setElement(testMap);
             messageToPost.setInvokedBy(testMap);
             messageToPost.setType("someType");

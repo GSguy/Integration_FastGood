@@ -13,6 +13,7 @@ public class UserBoundary {
 	public UserBoundary() {
 		 super();
 
+
 	 }
 	
 	public UserBoundary(String email) {

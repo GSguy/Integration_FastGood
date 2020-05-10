@@ -44,6 +44,7 @@ public class ElementServiceWithDB implements RelationalElementService {
 		this.checkIfManagerEmailExist(managerEmail); // TODO complete this check
 		
 		newElement.getCreatedBy().put("email", managerEmail); // TODO  why we need setCreatedBy
+
 		ElementEntity entity = this.elementEntityConverter.toEntity(newElement);
 		
 		// create new tupple in the idValue table with a non-used id
@@ -53,7 +54,8 @@ public class ElementServiceWithDB implements RelationalElementService {
 		this.lastValueDao.delete(idValue); // cleanup redundant data
 		
 		entity.setCreatedTimeStamp(new Date());
-		
+
+
 		entity = this.elementDao.save(entity); // UPSERT:  SELECT  -> UPDATE / INSERT
 		
 		return this.elementEntityConverter.convertFromEntity(entity);

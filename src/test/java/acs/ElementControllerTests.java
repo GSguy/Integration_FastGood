@@ -13,6 +13,9 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -115,7 +118,7 @@ class ElementControllerTests {
 
 	}
 
-	//@Test
+	@Test
 	public void testUpdatingElementsWithEmailAndIdy() throws Exception {
 
 		// GIVEN server is up
@@ -123,11 +126,12 @@ class ElementControllerTests {
 		// WHEN I PUT /{managerEmail}/{elementId} with a new message
 		// WITH responseFromServer.setName("test4");
 
-		ElementBoundary messageToPost
-				= new ElementBoundary();
-
+		ElementBoundary messageToPost = new ElementBoundary();
+		Map testMap = new HashMap<String,Object>();
+		testMap.put("sdf","sdasdf");
 		messageToPost.setName("test4");
 		messageToPost.setType("someType");
+		messageToPost.setElementAttributes(testMap);
 
 		ElementBoundary responseFromServer =
 				this.restTemplate
@@ -139,6 +143,7 @@ class ElementControllerTests {
 
 		responseFromServer.setName("test4");
 		responseFromServer.setType("someType");
+
 
 		this.restTemplate
 				.put(this.url + "/{managerEmail}/{elementId}",

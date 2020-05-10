@@ -94,8 +94,12 @@ public class AdminControllerTests {
         ElementBoundary messageToPost
                 = new ElementBoundary();
 
+        HashMap testMap2=new HashMap<String,Object>();
+        testMap2.put("sdfsf","asdfasdf");
+
         messageToPost.setName("test1");
         messageToPost.setType("typeTest");
+        messageToPost.setElementAttributes(testMap2);
 
         ElementBoundary responseFromServer =
                 this.restTemplate
