@@ -19,7 +19,9 @@ public class ActionEntityConverter {
 
 	
 	public ActionBoundary convertFromEntity (ActionEntity entity) {
+		
 		ActionBoundary boundary = new ActionBoundary();
+		
 		boundary.setCreatedTimestamp(entity.getCreatedTimeStamp());
 		boundary.setType(entity.getType());
 		
@@ -61,7 +63,6 @@ public class ActionEntityConverter {
 			throw new RuntimeException(e);
 		}
 		
-		
 		return boundary;
 	}
 	
@@ -80,7 +81,6 @@ public class ActionEntityConverter {
 		entity.setType(boundary.getType());
 				
 		// marshalling
-		if (boundary.getActionAttributes().size() == 0) throw new RuntimeException("Action Attributes Cannot be empty");
 		try {
 			entity.setActionAttributes(
 					this.jackson
