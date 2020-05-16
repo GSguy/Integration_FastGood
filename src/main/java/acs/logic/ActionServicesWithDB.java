@@ -28,10 +28,12 @@ public class ActionServicesWithDB implements ActionService {
 		this.lastValueDao = lastValueDao;
 	}
 	
+	
 	@Autowired
 	public void setActionEntityConverter(ActionEntityConverter actionEntityConverter) {
 		this.actionEntityConverter = actionEntityConverter;
 	}
+	
 	
 	@Override
 	@Transactional //(readOnly = false)
@@ -52,6 +54,7 @@ public class ActionServicesWithDB implements ActionService {
     	return this.actionEntityConverter.convertFromEntity(entity);
 	}
 
+	
 	@Override
 	@Transactional (readOnly = true) // have database handle race conditions
 	public List<ActionBoundary> getAllActions(String adminEmail) {
@@ -73,6 +76,7 @@ public class ActionServicesWithDB implements ActionService {
 		
 	}
 
+	
 	@Override
 	@Transactional //(readOnly = false)
 	public void deleteAllActions(String adminEmail) {

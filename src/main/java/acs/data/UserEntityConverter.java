@@ -49,6 +49,8 @@ public class UserEntityConverter {
 		return entity;
 		
 	}
+	
+	
 	public UserBoundary convertFromEntity(UserEntity user) {
 	UserBoundary boundary=new UserBoundary();
 

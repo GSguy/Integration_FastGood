@@ -60,6 +60,8 @@ public class UserControllerTests {
 
         return messageToServer;
     }
+    
+    
     @Test
     public void testGetSpecificUserWhenDBisEmpty() throws  Exception{
         // GIVEN server is up
@@ -77,6 +79,8 @@ public class UserControllerTests {
            assertTrue(exception instanceof RuntimeException);
         }
     }
+    
+    
     @Test
     public void testCreateNewUser() throws  Exception{
         // GIVEN server is up
@@ -85,7 +89,6 @@ public class UserControllerTests {
 
         UserBoundary  createUser = createUserMessageForTesting();
         UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",createUser);
-
 
         // THEN the server responds with the same message details
         assertThat(this.restTemplate
@@ -102,8 +105,9 @@ public class UserControllerTests {
                         UserRole.PLAYER.name().toUpperCase(),
                         "omer",
                         "someAvatar");
-
     }
+    
+    
     @Test()
     public void testCreateNewUserWithInvalidEmail() throws  Exception{
         // GIVEN server is running properly
@@ -136,6 +140,8 @@ public class UserControllerTests {
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
+    
+    
     @Test()
     public void testCreateNewUserWithNullUserRole() throws  Exception{
         // GIVEN server is running properly
@@ -167,6 +173,8 @@ public class UserControllerTests {
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
+    
+    
     @Test
     public void testCreateNewUserWithNullAvatar() throws  Exception{
         // GIVEN server is running properly
@@ -198,6 +206,8 @@ public class UserControllerTests {
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
+    
+    
     @Test
     public void testCreateNewUserWithEmptyAvatar() throws  Exception{
         // GIVEN server is running properly
@@ -221,8 +231,6 @@ public class UserControllerTests {
                                     this.url + "users",
                                     messageToPost,
                                     UserBoundary.class);
-
-
         });
 
         String expectedMessage = "Avatar Cannot be null or empty";
@@ -230,6 +238,8 @@ public class UserControllerTests {
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
+    
+    
     @Test
     public void testCreateNewUserWithNullUserName() throws  Exception{
         // GIVEN server is running properly
@@ -261,4 +271,5 @@ public class UserControllerTests {
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
+    
 }
