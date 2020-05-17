@@ -3,8 +3,11 @@ package acs.logic;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +19,7 @@ import acs.data.ActionEntity;
 import acs.data.ActionEntityConverter;
 
 @Service
-public class ActionServicesWithDB implements ActionService {
+public class ActionServicesWithDB implements ActionServiceUpgraded {
 
 	private ActionDao actionDao; // DAO = Data Access Object 
 	private ActionEntityConverter actionEntityConverter;
@@ -78,6 +81,22 @@ public class ActionServicesWithDB implements ActionService {
 
 	
 	@Override
+	@Transactional (readOnly = true) // have database handle race conditions
+	public List<ActionBoundary> getAllActions(String adminEmail, int size, int page) {
+		
+			checkAdminEmailIsExist(adminEmail); // TODO complete this check
+			
+			return this.actionDao.findAll(
+					 PageRequest.of(page, size, Direction.ASC, "ActionID"))
+					.getContent()
+					.stream()
+					.map(this.actionEntityConverter::convertFromEntity)
+					.collect(Collectors.toList())
+					;
+			
+	}
+	
+	@Override
 	@Transactional //(readOnly = false)
 	public void deleteAllActions(String adminEmail) {
 		checkAdminEmailIsExist(adminEmail); // TODO complete this check
@@ -87,5 +106,7 @@ public class ActionServicesWithDB implements ActionService {
 	private void checkAdminEmailIsExist(String adminEmail) {
 		// TODO to check if admin email is exist
 	}
+
+
 
 }

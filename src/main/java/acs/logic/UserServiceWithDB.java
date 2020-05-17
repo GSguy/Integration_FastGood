@@ -3,11 +3,14 @@ package acs.logic;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +19,7 @@ import acs.dal.UserDao;
 import acs.data.*;
 
 @Service
-public class UserServiceWithDB implements UserService {
+public class UserServiceWithDB implements UserServiceUpgraded {
 	
 	private UserDao userDao; // DAO = Data Access Object 
 	private UserEntityConverter userConverter;
@@ -119,6 +122,18 @@ public class UserServiceWithDB implements UserService {
 		return rv;
 	}
 	
+	@Override
+	public List<UserBoundary> getAllUsers(String adminEmail, int size, int page) {
+		
+		return this.userDao.findAll(
+				 PageRequest.of(page, size, Direction.ASC, "email"))
+				.getContent()
+				.stream()
+				.map(this.userConverter::convertFromEntity)
+				.collect(Collectors.toList())
+				;
+	}
+	
 	
 	@Override
 	@Transactional // (readOnly = false)
@@ -137,5 +152,8 @@ public class UserServiceWithDB implements UserService {
 		   }
 		   return result;
 		}
+
+
+
 	
 }

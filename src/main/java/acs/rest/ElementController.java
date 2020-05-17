@@ -7,20 +7,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ElementBoundary;
 import acs.boundaries.ElementIdWrapper;
-import acs.logic.RelationalElementService;
+import acs.logic.ElementServiceRelational;
 
 
 @RestController
 public class ElementController {
-	private RelationalElementService elementService;
+	private ElementServiceRelational elementService;
 	
 	// injection
 	@Autowired
-	public ElementController(RelationalElementService elementService) {
+	public ElementController(ElementServiceRelational elementService) {
 		super();
 		this.elementService =  elementService;
 	}
@@ -57,11 +58,14 @@ public class ElementController {
 	@RequestMapping(path = "/acs/elements/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ElementBoundary> getAllElements (@PathVariable("userEmail") String userEmail) {
+	public List<ElementBoundary> getAllElements (
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page, 
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@PathVariable("userEmail") String userEmail) {
 //		// STUB implementation
 //		ElementBoundary [] allElements=new ElementBoundary[2];
 //		return allElements;
-		return this.elementService.getAll(userEmail);
+		return this.elementService.getAll(userEmail, size, page);
 	}
 	
 	
@@ -96,9 +100,11 @@ public class ElementController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary[] getChildren (
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page, 
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@PathVariable("userEmail") String userEmail,
 			@PathVariable("parentElementId") String parentElementId) { 
-		return this.elementService.getChildrens(parentElementId, userEmail).toArray(new ElementBoundary[0]); // Java Reflection
+		return this.elementService.getChildrens(parentElementId, userEmail, size, page).toArray(new ElementBoundary[0]); // Java Reflection
 	}
 	
 	
@@ -107,9 +113,11 @@ public class ElementController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary[] getParents (
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page, 
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@PathVariable("userEmail") String userEmail,
 			@PathVariable("ChildElementId") String ChildElementId)  { 
-		return this.elementService.getParents(ChildElementId, userEmail).toArray(new ElementBoundary[0]); // Java Reflection
+		return this.elementService.getParents(ChildElementId, userEmail, size, page).toArray(new ElementBoundary[0]); // Java Reflection
 	}
 
 	

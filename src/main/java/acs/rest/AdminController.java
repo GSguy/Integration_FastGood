@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ActionBoundary;
@@ -60,7 +61,10 @@ public class AdminController {
 	@RequestMapping(path ="/acs/admin/users/{adminEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<UserBoundary> getAllUsers (@PathVariable("adminEmail") String adminEmail) {
+	public List<UserBoundary> getAllUsers (
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page, 
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@PathVariable("adminEmail") String adminEmail) {
 		return userService.getAllUsers(adminEmail);
 	}
 
@@ -69,7 +73,10 @@ public class AdminController {
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ActionBoundary> exportAllActions (@PathVariable("adminEmail") String adminEmail) {
+	public List<ActionBoundary> exportAllActions (
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page, 
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@PathVariable("adminEmail") String adminEmail) {
 		return actionService.getAllActions(adminEmail);
 	}
 	

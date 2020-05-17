@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +23,7 @@ import acs.data.ElementEntity;
 import acs.data.ElementEntityConverter;
 
 @Service
-public class ElementServiceWithDB implements RelationalElementService {
+public class ElementServiceWithDB implements ElementServiceRelational {
 	
 	private ElementDao elementDao; // DAO = Data Access Object 
 	private ElementEntityConverter elementEntityConverter;
@@ -107,7 +110,21 @@ public class ElementServiceWithDB implements RelationalElementService {
 		// On Error - rollback transaction
 		return rv;
 	}
+	
+	@Override
+	@Transactional (readOnly = true)
+	public List<ElementBoundary> getAll(String userEmail, int size, int page) {
 
+		this.checkIfUserEmailExist(userEmail); // TODO check why this is userEmail and not adminEmail		
+		return this.elementDao.findAll(
+				 PageRequest.of(page, size, Direction.ASC, "elementId"))
+				.getContent()
+				.stream()
+				.map(this.elementEntityConverter::convertFromEntity)
+				.collect(Collectors.toList())
+				;
+	}
+	
 	@Override
 	@Transactional (readOnly = true)
 	public ElementBoundary getSpecificElement(String userEmail, String elementId) {
@@ -153,35 +170,40 @@ public class ElementServiceWithDB implements RelationalElementService {
 		this.elementDao.save(parent);
 	}
 	
-	
 	@Override
 	@Transactional(readOnly = true)
-	public Set<ElementBoundary> getChildrens(String parentId,String userEmail) {
+	public List<ElementBoundary> getChildrens(String parentId,String userEmail, int size, int page) {
 		this.checkIfUserEmailExist(userEmail);
 		ElementEntity parent = this.elementDao
 				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(parentId)))
 				.orElseThrow(()->new EntityNotFoundException("could not find parent element with id: " + parentId));
-
-		return parent
-				.getChildrens()
+			
+		return this.elementDao.
+				findByChildrensId(parent.getElementId(),
+				PageRequest.of(page, size, Direction.ASC, "elementId"))
+				.getContent()
 				.stream() 
 				.map(this.elementEntityConverter::convertFromEntity) 
-				.collect(Collectors.toSet());
+				.collect(Collectors.toList());
 	}
-
+	
 	@Override
 	@Transactional(readOnly = true)
-	public Collection<ElementBoundary> getParents(String childrenId,String userEmail) {
+	public List<ElementBoundary> getParents(String childrenId,String userEmail, int size, int page) {
 		this.checkIfUserEmailExist(userEmail);
 		ElementEntity children = this.elementDao
 				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(childrenId)))
 				.orElseThrow(()->new EntityNotFoundException ("could not find  element with id: " + childrenId));
 		
-		return children
-				.getParents()
+		return this.elementDao.
+				findByParentsId(children.getElementId(),
+				 PageRequest.of(page, size, Direction.ASC, "elementId"))
+				.getContent()
 				.stream() 
-				.map(this.elementEntityConverter::convertFromEntity) //
-				.collect(Collectors.toSet());
+				.map(this.elementEntityConverter::convertFromEntity) 
+				.collect(Collectors.toList());
+
+
 	}
 	
 	public Boolean checkIfManagerEmailExist(String adminEmail) {
