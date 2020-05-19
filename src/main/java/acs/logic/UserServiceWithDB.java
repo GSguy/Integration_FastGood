@@ -42,22 +42,19 @@ public class UserServiceWithDB implements UserServiceUpgraded {
 	public UserBoundary createUser(UserBoundary user) {
 		UserEntity entity = this.userConverter.toEntity(user);
 		
-		// Check if User Email exist
 		if(entity.getEmail()==null) {
 	    	throw new EntityNotFoundException("could not create new user without email" );
 		}
+		checkIfUserEmailExist(entity.getEmail()); 	// Check if User exist
 		// ValidEmailAddress
 		if (!(isValidEmailAddress(entity.getEmail()))) {
 			throw new RuntimeException("User Email is not valid");
 		}
 		
-		// Guy: i'm not sure that we need this "if" check, for now.
-		//if(entity.getAvatar()!=null && entity.getEmail()!=null && entity.getRole()!=null && entity.getUsername()!=null) { //Check if all fields are valid
+		
 			entity = this.userDao.save(entity); // UPSERT:  SELECT  -> UPDATE / INSERT
 			return this.userConverter.convertFromEntity(entity);	
-    	//}
-		//else
-		//	return null;
+    	
 	}
 	
 	
@@ -154,6 +151,14 @@ public class UserServiceWithDB implements UserServiceUpgraded {
 		}
 
 
+	public Boolean checkIfUserEmailExist(String userEmail) {
+		UserEntity user=this.userDao.findOneByEmail(userEmail);
+		if(user!=null) {
+			throw new  EntityNotFoundException ("there is a user with  this  email : " + userEmail);
+		}
+		else return true;
+		
 
+		}
 	
 }

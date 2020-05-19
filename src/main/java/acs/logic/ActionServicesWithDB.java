@@ -1,5 +1,7 @@
 package acs.logic;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,10 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import acs.boundaries.ActionBoundary;
 import acs.dal.ActionDao;
+import acs.dal.ElementDao;
 import acs.dal.LastIdValue;
 import acs.dal.LastValueDao;
+import acs.dal.UserDao;
 import acs.data.ActionEntity;
 import acs.data.ActionEntityConverter;
+import acs.data.ElementEntity;
+import acs.data.UserEntity;
+import acs.data.UserRole;
 
 @Service
 public class ActionServicesWithDB implements ActionServiceUpgraded {
@@ -24,11 +31,14 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 	private ActionDao actionDao; // DAO = Data Access Object 
 	private ActionEntityConverter actionEntityConverter;
 	private LastValueDao lastValueDao;
-		
+	private UserDao userDao;
+	private ElementDao elementDao;
 	@Autowired
-	public ActionServicesWithDB(ActionDao actionDao, LastValueDao lastValueDao) {
+	public ActionServicesWithDB(ActionDao actionDao, LastValueDao lastValueDao,UserDao userDao,ElementDao elementDao) {
 		this.actionDao = actionDao;
 		this.lastValueDao = lastValueDao;
+		this.userDao=userDao;
+		this.elementDao=elementDao;
 	}
 	
 	
@@ -41,11 +51,26 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 	@Override
 	@Transactional //(readOnly = false)
 	public Object invokeAction(ActionBoundary action) {
-		ActionEntity entity = this.actionEntityConverter.toEntity(action);
+		String elementId=action.getElement().get("elementId");
+		String email=action.getInvokedBy().get("email");
+		if(elementId==null|| email==null) {
+			throw new RuntimeException("cannot invoke action without element id or inovkedby");
+		}
 		
+		UserEntity user=this.userDao.findOneByEmail(email);
+		if(user==null) {
+			throw new  EntityNotFoundException ("could not find any  user with  email : " + email);
+		}
+		if(user.getRole()!=UserRole.PLAYER) {
+			throw new RuntimeException("only users with player role can invoke actions");
+		}
+		ElementEntity element=this.elementDao.findOneByElementIdAndActive(Long.parseLong(elementId), true);
+		if(element==null) {
+			throw new EntityNotFoundException("could not find active Element for id : " + elementId);
+		}
 		// create new tupple in the idValue table with a non-used id
 		LastIdValue idValue = this.lastValueDao.save(new LastIdValue());
-		
+		ActionEntity entity = this.actionEntityConverter.toEntity(action);
 		// set Server fields
 		entity.setActionID(idValue.getLastId()); //create new ID - Not consider user ID INPUT
 		this.lastValueDao.delete(idValue);// cleanup redundant data

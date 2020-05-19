@@ -2,19 +2,19 @@ package acs.boundaries;
 
 public class ElementIdWrapper {
 	
-	private String elementId;
+	private String id;
 	
 	public ElementIdWrapper() {
 	}
-	
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
-		
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
-	public String getElementId() {
-		return elementId;
-		
-	}
+	
  
 }
