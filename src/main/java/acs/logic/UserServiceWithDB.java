@@ -47,7 +47,6 @@ public class UserServiceWithDB implements UserService {
 		if (!(isValidEmailAddress(entity.getEmail()))) {
 			throw new RuntimeException("User Email is not valid");
 		}
-	
 		
 		// Guy: i'm not sure that we need this "if" check, for now.
 		//if(entity.getAvatar()!=null && entity.getEmail()!=null && entity.getRole()!=null && entity.getUsername()!=null) { //Check if all fields are valid
