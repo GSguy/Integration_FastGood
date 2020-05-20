@@ -89,9 +89,9 @@ public class ElementController {
 	public void addElementToElement (
 			@PathVariable("managerEmail") String managerEmail,
 			@PathVariable("parentElementId") String parentElementId,
-			@RequestBody ElementIdWrapper elementId) { //{"responseId":"12"}
+			@RequestBody ElementIdWrapper id) { 
 		this.elementService
-			.addElementToParent(parentElementId, elementId.getElementId(),managerEmail);
+			.addElementToParent(parentElementId, id.getId(),managerEmail);
 	}
 	
 	

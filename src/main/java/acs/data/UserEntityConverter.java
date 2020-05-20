@@ -28,23 +28,22 @@ public class UserEntityConverter {
 		else
 			entity.setEmail(null);
 		
-		UserRole type = null;
+		UserRole role = null;
 		
 		if (user.getRole() != null)
 		{
-			type = UserRole.valueOf(user.getRole().name().toUpperCase());
+			role = UserRole.valueOf(user.getRole().name().toUpperCase());
+			entity.setRole(role);
 		}
-		else throw new RuntimeException("User Role Cannot be null");
 
 		if(user.getAvatar()!=null && user.getAvatar()!="" ) {
 			entity.setAvatar(user.getAvatar());
 		}
-		else throw new RuntimeException("Avatar Cannot be null or empty");
 		
 		if(user.getUsername()!=null) {
 			entity.setUsername(user.getUsername());
 		}
-		else throw new RuntimeException("User Name Cannot be null");
+	
 		
 		return entity;
 		

@@ -19,8 +19,11 @@ import acs.boundaries.ElementBoundary;
 import acs.dal.ElementDao;
 import acs.dal.LastIdValue;
 import acs.dal.LastValueDao;
+import acs.dal.UserDao;
 import acs.data.ElementEntity;
 import acs.data.ElementEntityConverter;
+import acs.data.UserEntity;
+import acs.data.UserRole;
 
 @Service
 public class ElementServiceWithDB implements ElementServiceRelational {
@@ -28,11 +31,12 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	private ElementDao elementDao; // DAO = Data Access Object 
 	private ElementEntityConverter elementEntityConverter;
 	private LastValueDao lastValueDao;
-	
+	private UserDao userDao;
 	@Autowired
-	public ElementServiceWithDB(ElementDao elementDao, LastValueDao lastValueDao) {
+	public ElementServiceWithDB(ElementDao elementDao, LastValueDao lastValueDao,UserDao userDao) {
 		this.elementDao = elementDao;
 		this.lastValueDao = lastValueDao;
+		this.userDao=userDao;
 	}
 	
 	@Autowired
@@ -44,9 +48,13 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	@Override
 	@Transactional //(readOnly = false)
 	public ElementBoundary create(String managerEmail, ElementBoundary newElement) {
-		this.checkIfManagerEmailExist(managerEmail); // TODO complete this check
+		checkIfUserEmailExist(managerEmail);
+		if(!checkIfManagerEmailExist(managerEmail)){ 
+			throw new RuntimeException("you don't have permission to create new element");
+		}
+
 		
-		newElement.getCreatedBy().put("email", managerEmail); // TODO  why we need setCreatedBy
+		newElement.getCreatedBy().put("email", managerEmail); 
 
 		ElementEntity entity = this.elementEntityConverter.toEntity(newElement);
 		
@@ -66,10 +74,14 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 
 	@Override
 	@Transactional //(readOnly = false)
-	public ElementBoundary update(String mangerEmail, String elementid, ElementBoundary update) {
-		this.checkIfManagerEmailExist(mangerEmail);
+	public ElementBoundary update(String managerEmail, String elementid, ElementBoundary update) {
+		checkIfUserEmailExist(managerEmail);
+
+		if(!checkIfManagerEmailExist(managerEmail)){ 
+			throw new RuntimeException("you don't have permission to update  element");
+		}
 		
-		ElementBoundary existeElement = this.getSpecificElement(mangerEmail, elementid);
+		ElementBoundary existeElement = this.getSpecificElement(managerEmail, elementid);
 		
 		if(update.getActive() != null) {
 			existeElement.setActive(update.getActive());
@@ -95,13 +107,16 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	@Override
 	@Transactional (readOnly = true)
 	public List<ElementBoundary> getAll(String userEmail) {
-
-		this.checkIfUserEmailExist(userEmail); // TODO check why this is userEmail and not adminEmail		
+		
+		checkIfUserEmailExist(userEmail);
+		Iterable<ElementEntity> content;
 		List<ElementBoundary> rv = new ArrayList<>();
-		
-		// SELECT * FROM MESSAGES
-		Iterable<ElementEntity> content = this.elementDao.findAll();
-		
+		if(checkIfManagerEmailExist(userEmail)) {
+		 content = this.elementDao.findAll();
+		}
+		else {
+			content=this.elementDao.findAllByActive(true);
+		}
 		for (ElementEntity msg : content) {
 			rv.add(this.elementEntityConverter.convertFromEntity(msg));
 		}
@@ -112,10 +127,10 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	}
 	
 	@Override
-	@Transactional (readOnly = true)
+	@Transactional (readOnly = true) //oshri
 	public List<ElementBoundary> getAll(String userEmail, int size, int page) {
-
-		this.checkIfUserEmailExist(userEmail); // TODO check why this is userEmail and not adminEmail		
+		checkIfUserEmailExist(userEmail); 	
+		
 		return this.elementDao.findAll(
 				 PageRequest.of(page, size, Direction.ASC, "elementId"))
 				.getContent()
@@ -128,22 +143,32 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	@Override
 	@Transactional (readOnly = true)
 	public ElementBoundary getSpecificElement(String userEmail, String elementId) {
-		this.checkIfUserEmailExist(userEmail); // TODO check why this is userEmail and not adminEmail
-		
+		checkIfUserEmailExist(userEmail); 		
 		// SELECT * FROM MESSAGES WHERE ID=? 
-		Optional<ElementEntity> entity = this.elementDao.findById(Long.parseLong(elementId));
-		
-		if (entity.isPresent()) {
-			return this.elementEntityConverter.convertFromEntity(entity.get());
+		Optional<ElementEntity> OptionalEntity;
+		ElementEntity entity = null;
+		if(checkIfManagerEmailExist(userEmail)) {
+			OptionalEntity = this.elementDao.findById(Long.parseLong(elementId));
+			if (OptionalEntity.isPresent()) {
+				entity=OptionalEntity.get();
+			}
+		}
+		else {
+			entity = this.elementDao.findOneByElementIdAndActive(Long.parseLong(elementId),true);
+
+		}
+		if (entity!=null) {
+			return this.elementEntityConverter.convertFromEntity(entity);
 		} else {
-			throw new EntityNotFoundException("could not find message for id: " + elementId);
+			throw new EntityNotFoundException("could not find Element for id: " + elementId);
 		}
 	}
 
 	@Override
 	@Transactional //(readOnly = false)
 	public void deleteAllElements(String adminEmail) {
-		this.checkIfManagerEmailExist(adminEmail); // TODO check why this is userEmail and not adminEmail
+		checkIfUserEmailExist(adminEmail); 		
+		checkIfManagerEmailExist(adminEmail); 
 		this.elementDao.deleteAll();
 	}
 	
@@ -151,7 +176,8 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	@Override
 	@Transactional
 	public void addElementToParent(String parentId, String childrenId,String managerEmail) {
-		this.checkIfManagerEmailExist(managerEmail);
+		checkIfUserEmailExist(managerEmail); 		
+		checkIfManagerEmailExist(managerEmail);
 		if (parentId != null && parentId.equals(childrenId)) {
 			throw new RuntimeException("elements cannot add themselves");
 		}
@@ -173,46 +199,58 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> getChildrens(String parentId,String userEmail, int size, int page) {
-		this.checkIfUserEmailExist(userEmail);
+		checkIfUserEmailExist(userEmail);
 		ElementEntity parent = this.elementDao
 				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(parentId)))
 				.orElseThrow(()->new EntityNotFoundException("could not find parent element with id: " + parentId));
 			
-		return this.elementDao.
+		/*return this.elementDao.
 				findByChildrensId(parent.getElementId(),
 				PageRequest.of(page, size, Direction.ASC, "elementId"))
-				.getContent()
+				//.getContent()
 				.stream() 
 				.map(this.elementEntityConverter::convertFromEntity) 
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()); */
+		return null;
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> getParents(String childrenId,String userEmail, int size, int page) {
-		this.checkIfUserEmailExist(userEmail);
+		checkIfUserEmailExist(userEmail);
 		ElementEntity children = this.elementDao
 				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(childrenId)))
 				.orElseThrow(()->new EntityNotFoundException ("could not find  element with id: " + childrenId));
-		
-		return this.elementDao.
+	
+		return null;
+	/*	return this.elementDao.
 				findByParentsId(children.getElementId(),
 				 PageRequest.of(page, size, Direction.ASC, "elementId"))
-				.getContent()
+				//.getContent()
 				.stream() 
 				.map(this.elementEntityConverter::convertFromEntity) 
 				.collect(Collectors.toList());
 
-
+*/
 	}
 	
 	public Boolean checkIfManagerEmailExist(String adminEmail) {
-		return true;// TODO STUB
-		//else throw new  EntityNotFoundException ("could not find any  user with  email : " + adminEmail);
+		UserEntity user=this.userDao.findOneByEmail(adminEmail);
+		if(user.getRole()==UserRole.MANAGER) {
+		return true;
+		}
+		else{
+			return false;
+		}
+		
 	}
 	public Boolean checkIfUserEmailExist(String userEmail) {
-		return true; // TODO STUB	
-		//else throw new  EntityNotFoundException ("could not find any  user with  email : " + userEmail);
+		UserEntity user=this.userDao.findOneByEmail(userEmail);
+		if(user==null) {
+			throw new  EntityNotFoundException ("could not find any  user with  email : " + userEmail);
+		}
+		else return true;
+		
 
 		}
 

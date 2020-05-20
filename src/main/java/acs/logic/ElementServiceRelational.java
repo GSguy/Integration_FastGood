@@ -9,6 +9,6 @@ public interface ElementServiceRelational extends ElementService {
 	public List<ElementBoundary> getChildrens(String parentId,String userEmail, int size, int page);
 	public List<ElementBoundary> getParents(String childrenId,String userEmail, int size, int page);
 	public List<ElementBoundary> getAll(String userEmail, int size, int page);
-
+	
 	
 }
