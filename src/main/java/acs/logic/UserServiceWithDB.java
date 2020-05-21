@@ -38,7 +38,20 @@ public class UserServiceWithDB implements UserServiceUpgraded {
 	@Transactional // (readOnly = false)
 	public UserBoundary createUser(UserBoundary user) {
 		UserEntity entity = this.userConverter.toEntity(user);
+		
+		if (user.getRole() == null)
+		{
+			throw new RuntimeException("User Role Cannot be null");
+		}
 
+		if(user.getAvatar() ==null || user.getAvatar() == "") {
+			throw new RuntimeException("Avatar Cannot be null or empty");
+		}
+
+		if(user.getUsername() == null) {
+			throw new RuntimeException("User Name Cannot be null");
+		} 
+		
 		if (entity.getEmail() == null) {
 			throw new EntityNotFoundException("could not create new user without email");
 		}
@@ -50,6 +63,7 @@ public class UserServiceWithDB implements UserServiceUpgraded {
 		if (!(GlobalUtilites.isValidEmailAddress(entity.getEmail()))) {
 			throw new RuntimeException("User Email is not valid");
 		}
+		
 
 		entity = this.userDao.save(entity); // UPSERT: SELECT -> UPDATE / INSERT
 		return this.userConverter.convertFromEntity(entity);

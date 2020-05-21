@@ -30,20 +30,10 @@ public class UserEntityConverter {
 		
 		UserRole role = null;
 		
-		if (user.getRole() != null)
-		{
-			role = UserRole.valueOf(user.getRole().name().toUpperCase());
-			entity.setRole(role);
-		}
+		entity.setRole(UserRole.valueOf(user.getRole().name().toUpperCase()));
+		entity.setAvatar(user.getAvatar());
+		entity.setUsername(user.getUsername());
 
-		if(user.getAvatar()!=null && user.getAvatar()!="" ) {
-			entity.setAvatar(user.getAvatar());
-		}
-		
-		if(user.getUsername()!=null) {
-			entity.setUsername(user.getUsername());
-		}
-	
 		
 		return entity;
 		
