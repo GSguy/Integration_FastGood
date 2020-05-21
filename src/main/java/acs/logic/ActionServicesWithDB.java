@@ -86,7 +86,9 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 	public List<ActionBoundary> getAllActions(String adminEmail) {
 		// ON INIT - create new Transaction
 	
-		checkAdminEmailIsExist(adminEmail); // TODO complete this check
+		if(!GlobalUtilites.checkIfAdminEmailExist(adminEmail, userDao)){ 
+			throw new RuntimeException("User don't have ligit permissions");
+		}
 		
 		List<ActionBoundary> rv = new ArrayList<>();
 		
@@ -105,9 +107,11 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 	
 	@Override
 	@Transactional (readOnly = true) // have database handle race conditions
-	public List<ActionBoundary> getAllActions(String adminEmail, int size, int page) {
+	public List<ActionBoundary> getAllActions(String adminEmail, int page, int size) {
 		
-			checkAdminEmailIsExist(adminEmail); // TODO complete this check
+		if(!GlobalUtilites.checkIfAdminEmailExist(adminEmail, userDao)){ 
+			throw new RuntimeException("User don't have ligit permissions");
+		}
 			
 			return this.actionDao.findAll(
 					 PageRequest.of(page, size, Direction.ASC, "ActionID"))
@@ -122,13 +126,13 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 	@Override
 	@Transactional //(readOnly = false)
 	public void deleteAllActions(String adminEmail) {
-		checkAdminEmailIsExist(adminEmail); // TODO complete this check
+		if(!GlobalUtilites.checkIfAdminEmailExist(adminEmail, userDao)){ 
+			throw new RuntimeException("User don't have ligit permissions");
+		}
 		this.actionDao.deleteAll();
 	}
 
-	private void checkAdminEmailIsExist(String adminEmail) {
-		// TODO to check if admin email is exist
-	}
+
 
 
 

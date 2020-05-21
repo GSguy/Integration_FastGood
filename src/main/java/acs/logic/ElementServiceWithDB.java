@@ -32,6 +32,7 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	private ElementEntityConverter elementEntityConverter;
 	private LastValueDao lastValueDao;
 	private UserDao userDao;
+	
 	@Autowired
 	public ElementServiceWithDB(ElementDao elementDao, LastValueDao lastValueDao,UserDao userDao) {
 		this.elementDao = elementDao;
@@ -47,14 +48,13 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	
 	@Override
 	@Transactional //(readOnly = false)
-	public ElementBoundary create(String managerEmail, ElementBoundary newElement) {
-		checkIfUserEmailExist(managerEmail);
-		if(!checkIfManagerEmailExist(managerEmail)){ 
-			throw new RuntimeException("you don't have permission to create new element");
+	public ElementBoundary create(String adminEmail, ElementBoundary newElement) {
+		if(!GlobalUtilites.checkIfAdminEmailExist(adminEmail, userDao)){ 
+			throw new RuntimeException("User don't have ligit permissions");
 		}
 
 		
-		newElement.getCreatedBy().put("email", managerEmail); 
+		newElement.getCreatedBy().put("email", adminEmail); 
 
 		ElementEntity entity = this.elementEntityConverter.toEntity(newElement);
 		
@@ -74,14 +74,14 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 
 	@Override
 	@Transactional //(readOnly = false)
-	public ElementBoundary update(String managerEmail, String elementid, ElementBoundary update) {
-		checkIfUserEmailExist(managerEmail);
+	public ElementBoundary update(String adminEmail, String elementid, ElementBoundary update) {
+		GlobalUtilites.checkIfUserEmailExistWithError(adminEmail, userDao);
 
-		if(!checkIfManagerEmailExist(managerEmail)){ 
-			throw new RuntimeException("you don't have permission to update  element");
+		if(!GlobalUtilites.checkIfAdminEmailExist(adminEmail, userDao)){ 
+			throw new RuntimeException("User don't have ligit permissions");
 		}
 		
-		ElementBoundary existeElement = this.getSpecificElement(managerEmail, elementid);
+		ElementBoundary existeElement = this.getSpecificElement(adminEmail, elementid);
 		
 		if(update.getActive() != null) {
 			existeElement.setActive(update.getActive());
@@ -108,10 +108,10 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	@Transactional (readOnly = true)
 	public List<ElementBoundary> getAll(String userEmail) {
 		
-		checkIfUserEmailExist(userEmail);
+		GlobalUtilites.checkIfUserEmailExistWithError(userEmail, userDao);
 		Iterable<ElementEntity> content;
 		List<ElementBoundary> rv = new ArrayList<>();
-		if(checkIfManagerEmailExist(userEmail)) {
+		if(GlobalUtilites.checkIfAdminEmailExist(userEmail, userDao)) {
 		 content = this.elementDao.findAll();
 		}
 		else {
@@ -127,27 +127,38 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	}
 	
 	@Override
-	@Transactional (readOnly = true) //oshri
-	public List<ElementBoundary> getAll(String userEmail, int size, int page) {
-		checkIfUserEmailExist(userEmail); 	
+	@Transactional (readOnly = true)
+	public List<ElementBoundary> getAll(String userEmail, int page, int size) {
+		GlobalUtilites.checkIfUserEmailExistWithError(userEmail, userDao); 	
 		
-		return this.elementDao.findAll(
+		if(GlobalUtilites.checkIfAdminEmailExist(userEmail, userDao)) {
+			return this.elementDao.findAll(
+					 PageRequest.of(page, size, Direction.ASC, "elementId"))
+					.getContent()
+					.stream()
+					.map(this.elementEntityConverter::convertFromEntity)
+					.collect(Collectors.toList())
+					;
+		}
+		else { // user permissions
+		return this.elementDao.findAllByActive(true,
 				 PageRequest.of(page, size, Direction.ASC, "elementId"))
 				.getContent()
 				.stream()
 				.map(this.elementEntityConverter::convertFromEntity)
 				.collect(Collectors.toList())
 				;
+		}
 	}
 	
 	@Override
 	@Transactional (readOnly = true)
 	public ElementBoundary getSpecificElement(String userEmail, String elementId) {
-		checkIfUserEmailExist(userEmail); 		
+		GlobalUtilites.checkIfUserEmailExistWithError(userEmail, userDao); 		
 		// SELECT * FROM MESSAGES WHERE ID=? 
 		Optional<ElementEntity> OptionalEntity;
 		ElementEntity entity = null;
-		if(checkIfManagerEmailExist(userEmail)) {
+		if(GlobalUtilites.checkIfAdminEmailExist(userEmail, userDao)) {
 			OptionalEntity = this.elementDao.findById(Long.parseLong(elementId));
 			if (OptionalEntity.isPresent()) {
 				entity=OptionalEntity.get();
@@ -167,17 +178,16 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	@Override
 	@Transactional //(readOnly = false)
 	public void deleteAllElements(String adminEmail) {
-		checkIfUserEmailExist(adminEmail); 		
-		checkIfManagerEmailExist(adminEmail); 
+		GlobalUtilites.checkIfUserEmailExistWithError(adminEmail, userDao); 		
+		GlobalUtilites.checkIfAdminEmailExist(adminEmail, userDao); 
 		this.elementDao.deleteAll();
 	}
 	
 	
 	@Override
 	@Transactional
-	public void addElementToParent(String parentId, String childrenId,String managerEmail) {
-		checkIfUserEmailExist(managerEmail); 		
-		checkIfManagerEmailExist(managerEmail);
+	public void addElementToParent(String parentId, String childrenId,String adminEmail) {
+		GlobalUtilites.checkIfUserEmailExistWithError(adminEmail, userDao); 		
 		if (parentId != null && parentId.equals(childrenId)) {
 			throw new RuntimeException("elements cannot add themselves");
 		}
@@ -198,8 +208,8 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<ElementBoundary> getChildrens(String parentId,String userEmail, int size, int page) {
-		checkIfUserEmailExist(userEmail);
+	public List<ElementBoundary> getChildrens(String parentId,String userEmail,  int page, int size) {
+		GlobalUtilites.checkIfUserEmailExistWithError(userEmail, userDao);
 		ElementEntity parent = this.elementDao
 				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(parentId)))
 				.orElseThrow(()->new EntityNotFoundException("could not find parent element with id: " + parentId));
@@ -216,8 +226,8 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<ElementBoundary> getParents(String childrenId,String userEmail, int size, int page) {
-		checkIfUserEmailExist(userEmail);
+	public List<ElementBoundary> getParents(String childrenId,String userEmail,  int page, int size) {
+		GlobalUtilites.checkIfUserEmailExistWithError(userEmail, userDao);
 		ElementEntity children = this.elementDao
 				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(childrenId)))
 				.orElseThrow(()->new EntityNotFoundException ("could not find  element with id: " + childrenId));
@@ -230,28 +240,58 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 				.stream() 
 				.map(this.elementEntityConverter::convertFromEntity) 
 				.collect(Collectors.toList());
-
 */
 	}
 	
-	public Boolean checkIfManagerEmailExist(String adminEmail) {
-		UserEntity user=this.userDao.findOneByEmail(adminEmail);
-		if(user.getRole()==UserRole.MANAGER) {
-		return true;
+	
+	@Override
+	public List<ElementBoundary> getElementsByType(String type, String userEmail,  int page, int size) {
+		GlobalUtilites.checkIfUserEmailExistWithError(userEmail, userDao);
+		if(GlobalUtilites.checkIfAdminEmailExist(userEmail, userDao)) {
+			return this.elementDao.findByType(type,
+					 PageRequest.of(page, size, Direction.ASC, "elementId"))
+					.getContent()
+					.stream()
+					.map(this.elementEntityConverter::convertFromEntity)
+					.collect(Collectors.toList())
+					;
 		}
-		else{
-			return false;
+		else { // user permissions
+		return this.elementDao.findByTypeAndActive(type, true,
+				 PageRequest.of(page, size, Direction.ASC, "elementId"))
+				.getContent()
+				.stream()
+				.map(this.elementEntityConverter::convertFromEntity)
+				.collect(Collectors.toList())
+				;
 		}
-		
 	}
-	public Boolean checkIfUserEmailExist(String userEmail) {
-		UserEntity user=this.userDao.findOneByEmail(userEmail);
-		if(user==null) {
-			throw new  EntityNotFoundException ("could not find any  user with  email : " + userEmail);
-		}
-		else return true;
-		
 
+	@Override
+	public List<ElementBoundary> getElementsByName(String name, String userEmail,  int page, int size) {
+		GlobalUtilites.checkIfUserEmailExistWithError(userEmail, userDao);
+		if(GlobalUtilites.checkIfAdminEmailExist(userEmail, userDao)) {
+			return this.elementDao.findByName(name,
+					 PageRequest.of(page, size, Direction.ASC, "elementId"))
+					.getContent()
+					.stream()
+					.map(this.elementEntityConverter::convertFromEntity)
+					.collect(Collectors.toList())
+					;
 		}
+		else { // user permissions
+		return this.elementDao.findByNameAndActive(name, true,
+				 PageRequest.of(page, size, Direction.ASC, "elementId"))
+				.getContent()
+				.stream()
+				.map(this.elementEntityConverter::convertFromEntity)
+				.collect(Collectors.toList())
+				;
+		}
+	}
+	
+	
+
+
 
 }
