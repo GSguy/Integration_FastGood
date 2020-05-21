@@ -10,7 +10,7 @@ import acs.data.UserRole;
 public class GlobalUtilites {
 	
 	
-	 public static Boolean checkIfAdminEmailExist(String adminEmail, UserDao userDao) {
+	 public static Boolean checkIfAdminEmailExist (String adminEmail, UserDao userDao) {
 		GlobalUtilites.checkIfUserEmailExistWithError(adminEmail, userDao);
 		UserEntity user = userDao.findOneByEmail(adminEmail);
 		if(user != null && user.getRole() == UserRole.ADMIN) {
@@ -21,6 +21,18 @@ public class GlobalUtilites {
 		}
 		
 	}
+	 
+	 public static Boolean checkIfManagerEmailExist (String managerEmail, UserDao userDao) {
+			GlobalUtilites.checkIfUserEmailExistWithError(managerEmail, userDao);
+			UserEntity user = userDao.findOneByEmail(managerEmail);
+			if(user != null && user.getRole() == UserRole.MANAGER) {
+			return true;
+			}
+			else{
+				return false;
+			}
+			
+		}
 	
 	public static Boolean checkIfUserEmailExistWithError(String userEmail, UserDao userDao) {
 		UserEntity user = userDao.findOneByEmail(userEmail);

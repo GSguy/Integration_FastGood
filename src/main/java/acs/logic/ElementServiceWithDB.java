@@ -48,13 +48,13 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	
 	@Override
 	@Transactional //(readOnly = false)
-	public ElementBoundary create(String adminEmail, ElementBoundary newElement) {
-		if(!GlobalUtilites.checkIfAdminEmailExist(adminEmail, userDao)){ 
+	public ElementBoundary create(String managerEmail, ElementBoundary newElement) {
+		if(!GlobalUtilites.checkIfManagerEmailExist(managerEmail, userDao)){ 
 			throw new RuntimeException("User don't have ligit permissions");
 		}
 
 		
-		newElement.getCreatedBy().put("email", adminEmail); 
+		newElement.getCreatedBy().put("email", managerEmail); 
 
 		ElementEntity entity = this.elementEntityConverter.toEntity(newElement);
 		
@@ -74,14 +74,13 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 
 	@Override
 	@Transactional //(readOnly = false)
-	public ElementBoundary update(String adminEmail, String elementid, ElementBoundary update) {
-		GlobalUtilites.checkIfUserEmailExistWithError(adminEmail, userDao);
+	public ElementBoundary update(String managerEmail, String elementid, ElementBoundary update) {
 
-		if(!GlobalUtilites.checkIfAdminEmailExist(adminEmail, userDao)){ 
+		if(!GlobalUtilites.checkIfManagerEmailExist(managerEmail, userDao)){ 
 			throw new RuntimeException("User don't have ligit permissions");
 		}
 		
-		ElementBoundary existeElement = this.getSpecificElement(adminEmail, elementid);
+		ElementBoundary existeElement = this.getSpecificElement(managerEmail, elementid);
 		
 		if(update.getActive() != null) {
 			existeElement.setActive(update.getActive());
@@ -186,8 +185,8 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	
 	@Override
 	@Transactional
-	public void addElementToParent(String parentId, String childrenId,String adminEmail) {
-		GlobalUtilites.checkIfUserEmailExistWithError(adminEmail, userDao); 		
+	public void addElementToParent(String parentId, String childrenId,String managerEmail) {
+		GlobalUtilites.checkIfManagerEmailExist(managerEmail, userDao);		
 		if (parentId != null && parentId.equals(childrenId)) {
 			throw new RuntimeException("elements cannot add themselves");
 		}
@@ -204,6 +203,22 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 		parent.addChildren(children);
 		
 		this.elementDao.save(parent);
+	}
+	
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Set<ElementBoundary> getChildrens(String parentId,String userEmail) {
+		GlobalUtilites.checkIfUserEmailExistWithError(userEmail, userDao);
+		ElementEntity parent = this.elementDao
+				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(parentId)))
+				.orElseThrow(()->new EntityNotFoundException("could not find parent element with id: " + parentId));
+
+		return parent
+				.getChildrens()
+				.stream() 
+				.map(this.elementEntityConverter::convertFromEntity) 
+				.collect(Collectors.toSet());
 	}
 	
 	@Override
@@ -234,6 +249,22 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 			
 			
 		}
+	}
+	
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<ElementBoundary> getParents(String childrenId,String userEmail) {
+		GlobalUtilites.checkIfUserEmailExistWithError(userEmail, userDao);
+		ElementEntity children = this.elementDao
+				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(childrenId)))
+				.orElseThrow(()->new EntityNotFoundException ("could not find  element with id: " + childrenId));
+		
+		return children
+				.getParents()
+				.stream() 
+				.map(this.elementEntityConverter::convertFromEntity) //
+				.collect(Collectors.toSet());
 	}
 	
 	@Override

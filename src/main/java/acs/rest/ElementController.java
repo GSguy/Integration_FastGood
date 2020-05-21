@@ -70,15 +70,15 @@ public class ElementController {
 	
 	
 	// GET -- > retrieve instance from system (SQL: SELECT)
-	@RequestMapping(path = "/acs/elements/{managerEmail}/{elementId}",
+	@RequestMapping(path = "/acs/elements/{userEmail}/{elementId}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary getElement (
-			@PathVariable("managerEmail") String managerEmail,
+			@PathVariable("userEmail") String userEmail,
 			@PathVariable("elementId") String elementId) {
 //		// STUB implementation
 //		return new ElementBoundary(managerEmail,elementId);
-		return this.elementService.getSpecificElement(managerEmail, elementId);
+		return this.elementService.getSpecificElement(userEmail, elementId);
 	}
 	
 
