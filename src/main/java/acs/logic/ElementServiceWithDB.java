@@ -208,39 +208,59 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<ElementBoundary> getChildrens(String parentId,String userEmail,  int page, int size) {
+	public List<ElementBoundary> getChildrens(String parentId,String userEmail, int page, int size) {
 		GlobalUtilites.checkIfUserEmailExistWithError(userEmail, userDao);
 		ElementEntity parent = this.elementDao
 				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(parentId)))
 				.orElseThrow(()->new EntityNotFoundException("could not find parent element with id: " + parentId));
+		
+		if(GlobalUtilites.checkIfAdminEmailExist(userEmail, userDao)) {
+			return this.elementDao.
+					findByChildrensElementId(parent.getElementId(),
+					PageRequest.of(page, size, Direction.ASC, "elementId"))
+					//.getContent()
+					.stream() 
+					.map(this.elementEntityConverter::convertFromEntity) 
+					.collect(Collectors.toList());
+		}
+		else {
+			return this.elementDao.
+					findByChildrensElementIdAndActive(parent.getElementId(), true,
+					PageRequest.of(page, size, Direction.ASC, "elementId"))
+					//.getContent()
+					.stream() 
+					.map(this.elementEntityConverter::convertFromEntity) 
+					.collect(Collectors.toList());
 			
-		/*return this.elementDao.
-				findByChildrensId(parent.getElementId(),
-				PageRequest.of(page, size, Direction.ASC, "elementId"))
-				//.getContent()
-				.stream() 
-				.map(this.elementEntityConverter::convertFromEntity) 
-				.collect(Collectors.toList()); */
-		return null;
+			
+		}
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<ElementBoundary> getParents(String childrenId,String userEmail,  int page, int size) {
-		GlobalUtilites.checkIfUserEmailExistWithError(userEmail, userDao);
+	public List<ElementBoundary> getParents(String childrenId,String userEmail, int page, int size) {
 		ElementEntity children = this.elementDao
 				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(childrenId)))
 				.orElseThrow(()->new EntityNotFoundException ("could not find  element with id: " + childrenId));
-	
-		return null;
-	/*	return this.elementDao.
-				findByParentsId(children.getElementId(),
-				 PageRequest.of(page, size, Direction.ASC, "elementId"))
-				//.getContent()
-				.stream() 
-				.map(this.elementEntityConverter::convertFromEntity) 
-				.collect(Collectors.toList());
-*/
+		if(GlobalUtilites.checkIfAdminEmailExist(userEmail, userDao)) {
+			return this.elementDao.
+					findByParentsElementId(children.getElementId(),
+					 PageRequest.of(page, size, Direction.ASC, "elementId"))
+					.getContent()
+					.stream() 
+					.map(this.elementEntityConverter::convertFromEntity) 
+					.collect(Collectors.toList());
+		}
+		else{
+			return this.elementDao.
+					findByParentsElementIdAndActive(children.getElementId(),true,
+					 PageRequest.of(page, size, Direction.ASC, "elementId"))
+					.getContent()
+					.stream() 
+					.map(this.elementEntityConverter::convertFromEntity) 
+					.collect(Collectors.toList());
+		}
+
 	}
 	
 	

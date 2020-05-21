@@ -25,7 +25,7 @@ public class GlobalUtilites {
 	public static Boolean checkIfUserEmailExistWithError(String userEmail, UserDao userDao) {
 		UserEntity user = userDao.findOneByEmail(userEmail);
 		if(user == null) {
-			throw new  EntityNotFoundException ("The email : " + userEmail + " is not exist.");
+			throw new  EntityNotFoundException ("The email " + userEmail + " is not exist.");
 		}
 		else return true;
 		
