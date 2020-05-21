@@ -1,7 +1,5 @@
 package acs.logic;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
