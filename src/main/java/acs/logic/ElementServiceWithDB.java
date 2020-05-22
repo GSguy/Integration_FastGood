@@ -137,7 +137,7 @@ public class ElementServiceWithDB implements RelationalElementService {
 	
 	
 	@Override
-	@Transactional
+	@Transactional //(readOnly = false)
 	public void addElementToParent(String parentId, String childrenId,String managerEmail) {
 		this.checkIfManagerEmailExist(managerEmail);
 		if (parentId != null && parentId.equals(childrenId)) {
@@ -188,10 +188,13 @@ public class ElementServiceWithDB implements RelationalElementService {
 				.collect(Collectors.toSet());
 	}
 	
+	
 	public Boolean checkIfManagerEmailExist(String adminEmail) {
 		return true;// TODO STUB
 		//else throw new  EntityNotFoundException ("could not find any  user with  email : " + adminEmail);
 	}
+	
+	
 	public Boolean checkIfUserEmailExist(String userEmail) {
 		return true; // TODO STUB	
 		//else throw new  EntityNotFoundException ("could not find any  user with  email : " + userEmail);
