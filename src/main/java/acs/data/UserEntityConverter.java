@@ -27,14 +27,15 @@ public class UserEntityConverter {
 			entity.setEmail(user.getEmail());
 		else
 			entity.setEmail(null);
-		
-		UserRole type = null;
-		
+				
 		if (user.getRole() != null)
 		{
-			type = UserRole.valueOf(user.getRole().name().toUpperCase());
+			UserRole role = UserRole.valueOf(user.getRole().name().toUpperCase());
+			entity.setRole(role);
 		}
-		else throw new RuntimeException("User Role Cannot be null");
+		else {
+			throw new RuntimeException("User Role cannot be null");
+		}
 
 		if(user.getAvatar()!=null && user.getAvatar()!="" ) {
 			entity.setAvatar(user.getAvatar());
@@ -47,7 +48,6 @@ public class UserEntityConverter {
 		else throw new RuntimeException("User Name Cannot be null");
 		
 		return entity;
-		
 	}
 	
 	

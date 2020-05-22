@@ -29,7 +29,6 @@ public class ElementBoundary {
 	    setElementId(elementId);
 	}
 
-
 	public String getName() {
 		return name;
 	}
@@ -107,4 +106,5 @@ public class ElementBoundary {
 				", elementAttributes=" + elementAttributes +
 				'}';
 	}
+	
 }

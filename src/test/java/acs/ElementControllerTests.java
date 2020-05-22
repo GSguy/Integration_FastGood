@@ -1,9 +1,6 @@
 package acs;
 
 import acs.boundaries.ElementBoundary;
-import acs.boundaries.UserBoundary;
-import acs.data.UserRole;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -72,6 +69,7 @@ class ElementControllerTests {
 						"name","type");
 	}
 
+	
 	@Test
 	public void testGetAllElementsOnServerInitReturnsEmptyArray() throws Exception {
 
@@ -88,9 +86,9 @@ class ElementControllerTests {
 								"omer@gmail.com");
 
 		assertThat(responseFromServer).isEmpty();
-
 	}
 
+	
 	@Test
 	public void testGetElementsWithEmailAndIdy() throws Exception {
 
@@ -118,6 +116,7 @@ class ElementControllerTests {
 
 	}
 
+	
 	@Test
 	public void testUpdatingElementsWithEmailAndIdy() throws Exception {
 
@@ -163,6 +162,8 @@ class ElementControllerTests {
 						"1",
 						"test4");
 	}
+	
+	
 	@Test
 	public void testCreateElementWithNullName() throws  Exception{
 		// GIVEN server is running properly
@@ -190,6 +191,8 @@ class ElementControllerTests {
 
 		assertTrue(actualMessage.contains(expectedMessage));
 	}
+	
+	
 	@Test
 	public void testCreateElementWithNullElementType() throws  Exception{
 

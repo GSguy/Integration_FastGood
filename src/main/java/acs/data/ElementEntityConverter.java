@@ -58,12 +58,14 @@ public class ElementEntityConverter {
 	}
 	
 	public ElementEntity toEntity (ElementBoundary boundary) {
+		
 		ElementEntity entity = new ElementEntity();
+		
 		entity.setActive(boundary.getActive());
 		entity.setCreatedTimeStamp(boundary.getCreatedTimeStamp());
 		entity.setLocation(boundary.getLocation());
 		
-		if (boundary.getElementId()!=null)
+		if (boundary.getElementId() != null)
 			entity.setElementId(Long.parseLong(this.fromEntityId(boundary.getElementId())));
 		else
 			entity.setElementId(null);
@@ -77,7 +79,6 @@ public class ElementEntityConverter {
 		try {
 			entity.setCreatedBy(
 					this.jackson.writeValueAsString(boundary.getCreatedBy()));	
-	
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -85,8 +86,6 @@ public class ElementEntityConverter {
 		try {
 			entity.setElementAttributes(
 					this.jackson.writeValueAsString(boundary.getElementAttributes()));
-
-	
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

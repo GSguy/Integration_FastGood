@@ -12,8 +12,6 @@ public class UserBoundary {
 	
 	public UserBoundary() {
 		 super();
-
-
 	 }
 	
 	public UserBoundary(String email) {
@@ -44,7 +42,6 @@ public class UserBoundary {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-
 
 	public UserRole getRole() {
 		return role;
