@@ -41,9 +41,13 @@ public class ElementServiceWithDB implements RelationalElementService {
 	@Override
 	@Transactional //(readOnly = false)
 	public ElementBoundary create(String managerEmail, ElementBoundary newElement) {
+		
 		this.checkIfManagerEmailExist(managerEmail); // TODO complete this check
 		
-		newElement.getCreatedBy().put("email", managerEmail); // TODO  why we need setCreatedBy
+		if (managerEmail == null || managerEmail == "")
+			throw new RuntimeException("Email not exist. New elements must have a creator email");
+		else
+			newElement.getCreatedBy().put("email", managerEmail);
 
 		ElementEntity entity = this.elementEntityConverter.toEntity(newElement);
 		
@@ -55,12 +59,12 @@ public class ElementServiceWithDB implements RelationalElementService {
 		
 		entity.setCreatedTimeStamp(new Date());
 
-
 		entity = this.elementDao.save(entity); // UPSERT:  SELECT  -> UPDATE / INSERT
 		
 		return this.elementEntityConverter.convertFromEntity(entity);
 	}
 
+	
 	@Override
 	@Transactional //(readOnly = false)
 	public ElementBoundary update(String mangerEmail, String elementid, ElementBoundary update) {
@@ -89,6 +93,7 @@ public class ElementServiceWithDB implements RelationalElementService {
 		return existeElement;
 	}
 
+	
 	@Override
 	@Transactional (readOnly = true)
 	public List<ElementBoundary> getAll(String userEmail) {
@@ -132,7 +137,7 @@ public class ElementServiceWithDB implements RelationalElementService {
 	
 	
 	@Override
-	@Transactional
+	@Transactional //(readOnly = false)
 	public void addElementToParent(String parentId, String childrenId,String managerEmail) {
 		this.checkIfManagerEmailExist(managerEmail);
 		if (parentId != null && parentId.equals(childrenId)) {
@@ -147,7 +152,6 @@ public class ElementServiceWithDB implements RelationalElementService {
 				.findById(Long.parseLong(this.elementEntityConverter.toEntityId(childrenId)))
 				.orElseThrow(()->new EntityNotFoundException ("could not find  children element with id: " + childrenId));
 
-		
 		parent.addChildren(children);
 		
 		this.elementDao.save(parent);
@@ -184,14 +188,16 @@ public class ElementServiceWithDB implements RelationalElementService {
 				.collect(Collectors.toSet());
 	}
 	
+	
 	public Boolean checkIfManagerEmailExist(String adminEmail) {
 		return true;// TODO STUB
 		//else throw new  EntityNotFoundException ("could not find any  user with  email : " + adminEmail);
 	}
+	
+	
 	public Boolean checkIfUserEmailExist(String userEmail) {
 		return true; // TODO STUB	
 		//else throw new  EntityNotFoundException ("could not find any  user with  email : " + userEmail);
-
-		}
+	}
 
 }

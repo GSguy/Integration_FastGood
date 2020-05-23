@@ -9,12 +9,10 @@ public class ElementIdWrapper {
 	
 	public void setElementId(String elementId) {
 		this.elementId = elementId;
-		
 	}
 	
 	public String getElementId() {
 		return elementId;
-		
 	}
  
 }

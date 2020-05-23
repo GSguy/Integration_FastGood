@@ -43,7 +43,6 @@ public class ActionEntity {
 		this.createdTimeStamp = createdTimeStamp;
 	}
 
-	@Lob
 	public String getInvokedBy() {
 		return invokedBy;
 	}
@@ -78,7 +77,6 @@ public class ActionEntity {
 		this.type = type;
 	}
 
-	@Lob
 	public String getElement() {
 		return element;
 	}

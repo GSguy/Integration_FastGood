@@ -28,7 +28,6 @@ public class ActionServicesWithDB implements ActionService {
 		this.lastValueDao = lastValueDao;
 	}
 	
-	
 	@Autowired
 	public void setActionEntityConverter(ActionEntityConverter actionEntityConverter) {
 		this.actionEntityConverter = actionEntityConverter;

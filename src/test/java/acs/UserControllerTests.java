@@ -12,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -33,6 +32,7 @@ public class UserControllerTests {
     public void init() {
         this.restTemplate = new RestTemplate();
     }
+    
     @BeforeEach
     public void setup() {
         this.url = "http://localhost:" + port + "/acs/";
@@ -48,9 +48,10 @@ public class UserControllerTests {
         user.setUsername("omer");
         return user;
     }
-    public UserBoundary createPostMessageAndReturningTheMessage(String uri,UserBoundary messageToPost)
+    
+    
+    public UserBoundary createPostMessageAndReturningTheMessage(String uri, UserBoundary messageToPost)
     {
-
         UserBoundary messageToServer =
                 this.restTemplate
                         .postForObject(
@@ -102,7 +103,7 @@ public class UserControllerTests {
                 )
                 .containsExactly(
                         "omerlewitz@gmail.com",
-                        UserRole.PLAYER.name().toUpperCase(),
+                        UserRole.valueOf(UserRole.PLAYER.name().toUpperCase()),
                         "omer",
                         "someAvatar");
     }
@@ -143,7 +144,7 @@ public class UserControllerTests {
     
     
     @Test()
-    public void testCreateNewUserWithNullUserRole() throws  Exception{
+    public void testCreateNewUserWithNullUserRole() throws  Exception {
         // GIVEN server is running properly
         // AND I create user with invalid UserRole as 'null'
         // WHEN I POST /users with a new message
@@ -155,8 +156,7 @@ public class UserControllerTests {
             user.setAvatar("someAvatar");
             user.setUsername("omer");
 
-            UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",user);
-
+            UserBoundary  messageToPost = createPostMessageAndReturningTheMessage("users", user);
 
             UserBoundary messageToServer =
                     this.restTemplate
@@ -164,11 +164,9 @@ public class UserControllerTests {
                                     this.url + "users",
                                     messageToPost,
                                     UserBoundary.class);
-
-
         });
 
-        String expectedMessage = "User Role Cannot be null";
+        String expectedMessage = "User Role cannot be null";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
@@ -189,7 +187,6 @@ public class UserControllerTests {
             user.setUsername("omer");
 
             UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",user);
-
 
             UserBoundary messageToServer =
                     this.restTemplate
@@ -224,7 +221,6 @@ public class UserControllerTests {
 
             UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",user);
 
-
             UserBoundary messageToServer =
                     this.restTemplate
                             .postForObject(
@@ -254,7 +250,6 @@ public class UserControllerTests {
             user.setAvatar("address");
 
             UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",user);
-
 
             UserBoundary messageToServer =
                     this.restTemplate

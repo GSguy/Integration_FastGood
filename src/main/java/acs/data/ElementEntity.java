@@ -46,7 +46,6 @@ public class ElementEntity {
     public ElementEntity() {
     	childrens=new HashSet<>();
     	parents=new HashSet<>();
-
 	}
 
 	public String getName() {
@@ -74,7 +73,6 @@ public class ElementEntity {
 		this.createdTimestamp = createdTimeStamp;
 	}
 
-	@Lob
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -123,7 +121,6 @@ public class ElementEntity {
 			  inverseJoinColumns = @JoinColumn(name = "children_id"))
 	public Set<ElementEntity> getParents() {
 		return parents;}
-	
 
 	public void setChildrens(Set<ElementEntity> childrens) {
 		this.childrens = childrens;
@@ -146,5 +143,21 @@ public class ElementEntity {
 		this.childrens.add(children);
 		children.addParent(this);
 	}
-
+	
+	@Override
+	public boolean equals(Object object) {
+	    if(object instanceof ElementEntity && ((ElementEntity)object).getElementId() == this.elementId)
+	        return true;
+	    else
+	    	return false;
+	}
+	
+	// this is kind of calculate hashCode:
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + this.elementId.hashCode();
+        return result;
+    }
+	
 }

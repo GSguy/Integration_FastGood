@@ -40,7 +40,7 @@ public class UserServiceWithDB implements UserService {
 		UserEntity entity = this.userConverter.toEntity(user);
 		
 		// Check if User Email exist
-		if(entity.getEmail()==null) {
+		if(entity.getEmail() == null) {
 	    	throw new EntityNotFoundException("could not create new user without email" );
 		}
 		// ValidEmailAddress
@@ -48,13 +48,12 @@ public class UserServiceWithDB implements UserService {
 			throw new RuntimeException("User Email is not valid");
 		}
 		
-		// Guy: i'm not sure that we need this "if" check, for now.
-		//if(entity.getAvatar()!=null && entity.getEmail()!=null && entity.getRole()!=null && entity.getUsername()!=null) { //Check if all fields are valid
-			entity = this.userDao.save(entity); // UPSERT:  SELECT  -> UPDATE / INSERT
-			return this.userConverter.convertFromEntity(entity);	
-    	//}
-		//else
-		//	return null;
+		if (user.getUsername() == null)
+			throw new EntityNotFoundException("Could not create new user without username" );
+		
+		entity = this.userDao.save(entity); // UPSERT:  SELECT  -> UPDATE / INSERT
+		
+		return this.userConverter.convertFromEntity(entity);	
 	}
 	
 	
