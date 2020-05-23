@@ -3,27 +3,32 @@ package acs.rest;
 import java.util.List;
 
 import acs.logic.ActionService;
+import acs.logic.ActionServiceUpgraded;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ActionBoundary;
 import acs.boundaries.UserBoundary;
 import acs.logic.ElementService;
+import acs.logic.ElementServiceRelational;
 import acs.logic.UserService;
+import acs.logic.UserServiceUpgraded;
 
 @RestController
 public class AdminController {
-	private ElementService elementService;
-	private UserService userService;
-	private ActionService actionService;
+	private ElementServiceRelational elementService;
+	private UserServiceUpgraded userService;
+	private ActionServiceUpgraded actionService;
 	
 	// injection
 	@Autowired
-	public AdminController(ElementService elementService, UserService userService, ActionService actionService) {
+	public AdminController(ElementServiceRelational elementService, UserServiceUpgraded userService, ActionServiceUpgraded actionService) {
 		super();
 		this.elementService =  elementService;
 		this.userService = userService;
@@ -60,8 +65,11 @@ public class AdminController {
 	@RequestMapping(path ="/acs/admin/users/{adminEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<UserBoundary> getAllUsers (@PathVariable("adminEmail") String adminEmail) {
-		return userService.getAllUsers(adminEmail);
+	public List<UserBoundary> getAllUsers (
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page, 
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@PathVariable("adminEmail") String adminEmail) {
+		return userService.getAllUsers(adminEmail, page, size);
 	}
 
   
@@ -69,8 +77,11 @@ public class AdminController {
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ActionBoundary> exportAllActions (@PathVariable("adminEmail") String adminEmail) {
-		return actionService.getAllActions(adminEmail);
+	public List<ActionBoundary> exportAllActions (
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page, 
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@PathVariable("adminEmail") String adminEmail) {
+		return actionService.getAllActions(adminEmail, page, size);
 	}
 	
 }

@@ -1,9 +1,9 @@
 package acs.dal;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import acs.data.ActionEntity;
 
-public interface ActionDao extends CrudRepository<ActionEntity, Long>{
+public interface ActionDao extends PagingAndSortingRepository<ActionEntity, Long>{
 
 }

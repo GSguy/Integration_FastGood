@@ -16,20 +16,12 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
+
 @Entity
 @Table(name = "Elements")
 public class ElementEntity {
 	
-	/*	ElementBoundary :
-    private String elementId;
-    private String type;
-    private String name;
-    private Boolean active;
-    private Date createdTimeStamp;
-    private Map<String,String> createdBy;
-    private Location location;
-    private Map<String,Object> elementAttributes;
-	 */
 	
     private Long elementId;
     private String type;

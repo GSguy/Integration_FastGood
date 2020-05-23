@@ -16,6 +16,7 @@ public class UserEntity {
 	private String username;
 	private String avatar;
 	 */
+
 	
 	private String email;
 	private UserRole role;
