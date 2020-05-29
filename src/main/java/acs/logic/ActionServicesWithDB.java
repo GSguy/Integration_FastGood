@@ -50,8 +50,9 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 	
 	
 	@Autowired
-	public void setActionEntityConverter(ActionEntityConverter actionEntityConverter) {
+	public void setActionEntityConverter(ActionEntityConverter actionEntityConverter, ElementEntityConverter elementEntityConverter) {
 		this.actionEntityConverter = actionEntityConverter;
+		this.elementEntityConverter = elementEntityConverter;
 	}
 	
 	
@@ -77,7 +78,7 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 		}
 		
 		ElementEntity element=this.elementDao.findOneByElementIdAndActive(Long.parseLong(elementId), true);
-		if(element==null) {
+		if(element == null) {
 			throw new EntityNotFoundException("could not find active Element for id : " + elementId);
 		}
 		
@@ -89,6 +90,7 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 				
 		// Type: 'addComment' , 'addDish'
 		HashMap<String,Object> actionAttributes = (HashMap<String, Object>) action.getActionAttributes();
+		System.out.println(element.getElementId());
 		ElementBoundary elementBoundary = this.elementEntityConverter.convertFromEntity(element);
 
 		
@@ -100,9 +102,12 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 				Comment comment = new Comment((String)actionAttributes.get("header"), (String)actionAttributes.get("content"));
 				Object commentList = elementBoundary.getElementAttributes().get("comments");
 				if (commentList == null) {
+					
 					ArrayList<Comment> initalizeCommentsList = new ArrayList<>();
 					initalizeCommentsList.add(comment);
-					elementBoundary.setElementAttributes((Map<String, Object>) elementBoundary.getElementAttributes().put("comments", initalizeCommentsList));
+					HashMap<String, Object> elementAttributesUpdated  = (HashMap<String, Object>) elementBoundary.getElementAttributes();
+					elementAttributesUpdated.put("comments", initalizeCommentsList);
+					elementBoundary.setElementAttributes(elementAttributesUpdated);
 				}
 				else {
 					((ArrayList<Comment>) commentList).add(comment);
@@ -113,12 +118,14 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 				if(! actionAttributes.containsKey("name") || !actionAttributes.containsKey("price") ) {
 					throw new RuntimeException("Missing at least one Dish Attribute  ");
 				}
-				Dish dish = new Dish((String)actionAttributes.get("name"), (float)actionAttributes.get("price"));
+				Dish dish = new Dish((String)actionAttributes.get("name"), (Float)actionAttributes.get("price"));
 				Object dishList = elementBoundary.getElementAttributes().get("dishes");
 				if (dishList == null) {
 					ArrayList<Dish> initalizeDishesList = new ArrayList<>();
 					initalizeDishesList.add(dish);
-					elementBoundary.setElementAttributes((Map<String, Object>) elementBoundary.getElementAttributes().put("dishes", initalizeDishesList));
+					HashMap<String, Object> elementAttributesUpdated  = (HashMap<String, Object>) elementBoundary.getElementAttributes();
+					elementAttributesUpdated.put("dishes", initalizeDishesList);
+					elementBoundary.setElementAttributes(elementAttributesUpdated);
 				}
 				else {
 					((ArrayList<Dish>) dishList).add(dish);
