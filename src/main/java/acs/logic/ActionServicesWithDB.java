@@ -118,7 +118,17 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 				if(! actionAttributes.containsKey("name") || !actionAttributes.containsKey("price") ) {
 					throw new RuntimeException("Missing at least one Dish Attribute  ");
 				}
-				Dish dish = new Dish((String)actionAttributes.get("name"), (Float)actionAttributes.get("price"));
+				Object price=actionAttributes.get("price");
+				if(price instanceof String) {
+					price=Double.valueOf((String) price);
+				}
+				else {
+					if(price instanceof Integer) {
+						price=Double.valueOf((Integer) price);
+
+					}
+				}
+				Dish dish = new Dish((String)actionAttributes.get("name"),(Double) price);
 				Object dishList = elementBoundary.getElementAttributes().get("dishes");
 				if (dishList == null) {
 					ArrayList<Dish> initalizeDishesList = new ArrayList<>();
