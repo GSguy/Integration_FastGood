@@ -30,7 +30,6 @@ public class AdminControllerTests {
         messageToPost.setName("test1");
         messageToPost.setType("typeTest");
 
-
         return messageToPost;
     }
 
@@ -44,6 +43,8 @@ public class AdminControllerTests {
                                 ElementBoundary.class, "xx@xx.com");
         return  messageToServer;
     }
+    
+    
     public ActionBoundary createActionMessageForTesting()
     {
         ActionBoundary newActionBoundary = new ActionBoundary();
@@ -56,6 +57,8 @@ public class AdminControllerTests {
         newActionBoundary.setType("someType");
         return newActionBoundary;
     }
+    
+    
     public ActionBoundary createPostMessageAndReturningTheMessage(ActionBoundary messageToPost)
     {
         ActionBoundary messageToServer =
@@ -64,10 +67,11 @@ public class AdminControllerTests {
                                 this.url + "actions",
                                 messageToPost,
                                 ActionBoundary.class);
-
-
+        
         return  messageToServer;
     }
+    
+    
     @LocalServerPort
     public void setPort(int port) {
         this.port = port;
@@ -82,7 +86,8 @@ public class AdminControllerTests {
         this.url = "http://localhost:" + port + "/acs/";
     }
 
-    @Test
+    
+    //@Test
     public void testPostMessageReturnsMessageDetailsInResponse() throws Exception{
 
         // GIVEN server is run properly
@@ -113,7 +118,9 @@ public class AdminControllerTests {
                 .isEqualToComparingOnlyGivenFields(messageToPost,
                         "name","type");
     }
-    @Test
+    
+    
+    //@Test
     // DELETE - delete all elements content (SQL: delete)
     public void testDeleteAllElementWithOneElementCreationForTesting() throws  Exception{
 
@@ -137,9 +144,10 @@ public class AdminControllerTests {
                                 ElementBoundary[].class,"xx@xx.com");
 
         assertThat(responseFromServer).isEmpty();
-
     }
-    @Test
+    
+    
+    //@Test
     // DELETE - delete all users content (SQL: delete)
     public void testDeleteAllUsersWithOneElementCreationForTesting() throws  Exception{
         // GIVEN server is run properly
@@ -162,7 +170,8 @@ public class AdminControllerTests {
         assertThat(responseFromServer).isEmpty();
     }
 
-    @Test
+    
+    //@Test
     public void testDeleteAllActionsWithOneElementCreationForTesting() throws  Exception{
           // GIVEN server is run properly
           // do nothing
@@ -183,11 +192,7 @@ public class AdminControllerTests {
                                 ActionBoundary[].class,
                                 "xx@xx.com");
 
-
-        assertThat(responseFromServer).isEmpty();
-      
+        assertThat(responseFromServer).isEmpty();      
     }
 
-      
-      
 }

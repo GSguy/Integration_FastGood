@@ -104,6 +104,44 @@ public class ActionControllerTests {
     
     
     @Test
+    public void testCreateActionWithNonExistEmail() throws Exception {
+        // GIVEN server is running properly
+        // AND I create action with invalid type as 'null'
+        // WHEN I POST /actions with a new message
+        // THEN the server responds with expected exception
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            ActionBoundary messageToPost = new ActionBoundary();
+            
+            HashMap<String, Object> testMap = new HashMap<String,Object>();
+            testMap.put("someKey","someValue");
+            messageToPost.setActionAttributes(testMap);
+            messageToPost.setType("t1");
+            
+            HashMap<String, String> testElement = new HashMap<String,String>();
+            testElement.put("elementId", "123");
+            messageToPost.setElement(testElement);
+            
+            HashMap<String, String> testInvokeBy = new HashMap<String,String>();
+            testInvokeBy.put("email", "nonExist@gmail.com");
+            messageToPost.setInvokedBy(testInvokeBy);
+                        
+            ElementBoundary responseFromServer =
+                    this.restTemplate
+                            .postForObject(
+                                    this.url + "/actions",
+                                    messageToPost,
+                                    ElementBoundary.class);
+        });
+
+        String expectedMessage = "could not find any user with  email";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    
+    
+    //@Test
     public void testCreateActionProperly() throws Exception {
             // GIVEN server is running properly
             // AND I create ActionBoundary object and assign attributes

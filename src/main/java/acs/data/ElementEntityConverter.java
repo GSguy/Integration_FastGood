@@ -65,7 +65,7 @@ public class ElementEntityConverter {
 		
 		ElementEntity entity = new ElementEntity();
 		
-		if (boundary.getActive() != true || boundary.getActive() != false) throw new RuntimeException("Invalid value of Active param");
+		if ((boundary.getActive() == null)) throw new RuntimeException("Active param can't be null");
 		entity.setActive(boundary.getActive());
 		
 		entity.setCreatedTimeStamp(boundary.getCreatedTimeStamp());
