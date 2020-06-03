@@ -18,7 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class ElementControllerTests {
+public class ElementControllerTests {
+	
 	private RestTemplate restTemplate;
 	private String url;
 	private int port;
@@ -53,10 +54,11 @@ class ElementControllerTests {
 		// AND i insert values to ElementBoundary object with name-"test1" and type "typeTest"
 		// THEN the server responds with the same message details, except for the timestamp
 
-		ElementBoundary messageToPost
-				= new ElementBoundary();
+		ElementBoundary messageToPost = new ElementBoundary();
+		
 		messageToPost.setName("test1");
 		messageToPost.setType("typeTest");
+		
 		ElementBoundary responseFromServer =
 				this.restTemplate
 						.postForObject(
@@ -64,6 +66,8 @@ class ElementControllerTests {
 								messageToPost,
 								ElementBoundary.class, "omer@gmail.com");
 
+		System.out.println("Start: \n" + responseFromServer.toString());
+		
 		assertThat(responseFromServer)
 				.isEqualToComparingOnlyGivenFields(messageToPost,
 						"name","type");
@@ -90,15 +94,13 @@ class ElementControllerTests {
 
 	
 	@Test
-	public void testGetElementsWithEmailAndIdy() throws Exception {
-
+	public void testGetElementsWithEmailAndId() throws Exception {
 		// GIVEN server is run properly
 		// WHEN I POST /elements/omer@gmail.com with a new message
 		// AND I insert values to ElementBoundary object with name "test1",type "typeTest",elementID "1"
 		// THEN the server responds with the same message details, except for the timestamp
 
-		ElementBoundary messageToPost
-				= new ElementBoundary();
+		ElementBoundary messageToPost = new ElementBoundary();
 
 		messageToPost.setName("test1");
 		messageToPost.setType("typeTest");
@@ -113,7 +115,6 @@ class ElementControllerTests {
 		assertThat(responseFromServer)
 				.isEqualToComparingOnlyGivenFields(messageToPost,
 						"name","type");
-
 	}
 
 	
@@ -165,6 +166,33 @@ class ElementControllerTests {
 	
 	
 	@Test
+	public void testCreateElementWithUserNotExist() throws Exception {
+		// GIVEN server is running properly
+		// AND I create user with invalid Element name  as 'null'
+		// WHEN I POST /acs/elements/{managerEmail} with a new message
+		// THEN the server responds with expected exception
+
+		Exception exception = assertThrows(RuntimeException.class, () -> {
+			ElementBoundary messageToPost = new ElementBoundary();
+			
+			messageToPost.setActive(true);
+
+			ElementBoundary responseFromServer =
+					this.restTemplate
+							.postForObject(
+									this.url + "/{managerEmail}",
+									messageToPost,
+									ElementBoundary.class, "aa@xx.com");
+		});
+
+		String expectedMessage = "The email aa@xx.com is not exist.";
+		String actualMessage = exception.getMessage();
+		
+		assertTrue(actualMessage.contains(expectedMessage));
+	}
+	
+
+	@Test
 	public void testCreateElementWithNullName() throws  Exception{
 		// GIVEN server is running properly
 		// AND I create user with invalid Element name  as 'null'
@@ -182,19 +210,23 @@ class ElementControllerTests {
 									this.url + "/{managerEmail}",
 									messageToPost,
 									ElementBoundary.class, "xx@xx.com");
-
-
 		});
 
 		String expectedMessage = "Element Name Cannot be null";
 		String actualMessage = exception.getMessage();
 
+		// Check if the email is exist
+		if (! actualMessage.contains("The email xx@xx.com is not exist."))
+			expectedMessage = "Element Name Cannot be null";
+		else
+			expectedMessage = "The email xx@xx.com is not exist.";
+		
 		assertTrue(actualMessage.contains(expectedMessage));
 	}
 	
 	
 	@Test
-	public void testCreateElementWithNullElementType() throws  Exception{
+	public void testCreateElementWithNullElementType() throws Exception {
 
 		// GIVEN server is running properly
 		// AND I create user with invalid Element Type  as 'null'
@@ -202,8 +234,8 @@ class ElementControllerTests {
 		// THEN the server responds with expected exception
 
 		Exception exception = assertThrows(RuntimeException.class, () -> {
-			ElementBoundary messageToPost
-					= new ElementBoundary();
+			ElementBoundary messageToPost = new ElementBoundary();
+			
 			messageToPost.setActive(true);
 			messageToPost.setName("test");
 
@@ -213,12 +245,16 @@ class ElementControllerTests {
 									this.url + "/{managerEmail}",
 									messageToPost,
 									ElementBoundary.class, "xx@xx.com");
-
-
 		});
 
-		String expectedMessage = "Element Type Cannot be null";
+		String expectedMessage = "";
 		String actualMessage = exception.getMessage();
+		
+		// Check if the email is exist
+		if (! actualMessage.contains("The email xx@xx.com is not exist."))
+			expectedMessage = "Element Type Cannot be null";
+		else
+			expectedMessage = "The email xx@xx.com is not exist.";
 
 		assertTrue(actualMessage.contains(expectedMessage));
 	}

@@ -65,7 +65,7 @@ public class ActionServicesWithDB implements ActionServiceUpgraded {
 		String elementId = action.getElement().get("elementId");
 
 		if (elementId == null || email == null) {
-			throw new RuntimeException("cannot invoke action without element id or inovkedby");
+			throw new RuntimeException("Cannot invoke action without element id or inovkedby");
 		}
 
 		UserEntity user = this.userDao.findOneByEmail(email);
