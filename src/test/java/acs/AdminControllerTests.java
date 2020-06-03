@@ -150,7 +150,6 @@ public class AdminControllerTests {
 
         ElementBoundary messageToServer=createPostMessageAndReturningTheMessage(elementForTesting);
 
-
         this.restTemplate.delete(this.url + "admin/users/{managerEmail}", ElementBoundary.class, "xx@xx.com");
 
         ElementBoundary[] responseFromServer =

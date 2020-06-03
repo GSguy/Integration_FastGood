@@ -40,21 +40,22 @@ public class ActionControllerTests {
 
 
     @Test
-    public void testCreateActionWithEmptyInvokedBy() throws  Exception{
+    public void testCreateActionWithEmptyInvokedBy() throws Exception {
         // GIVEN server is running properly
         // AND I create user with invalid Action Type  as 'null'
         // WHEN I POST /actions with a new message
         // THEN the server responds with expected exception
         Exception exception = assertThrows(RuntimeException.class, () -> {
             ActionBoundary messageToPost = new ActionBoundary();
-            HashMap testMap=new HashMap<String,String>();
-            HashMap testMap2=new HashMap<String,Object>();
-            messageToPost.setActionAttributes(testMap2);
-            testMap2.put("sdfsf","asdfasdf");
-            testMap.put("elementID","1");
+            
+            HashMap<String, Object> testMap=new HashMap<String,Object>();
+            testMap.put("elementId","1");
+            messageToPost.setActionAttributes(testMap);
             messageToPost.setType("type1");
-            messageToPost.setElement(testMap );
-
+            
+            HashMap<String, String> testElement=new HashMap<String,String>();
+            testElement.put("elementId","1");
+            messageToPost.setElement(testElement);
 
             ElementBoundary responseFromServer =
                     this.restTemplate
@@ -62,30 +63,30 @@ public class ActionControllerTests {
                                     this.url + "/actions",
                                     messageToPost,
                                     ElementBoundary.class);
-
-
         });
 
-        String expectedMessage = "Action invokedBy Cannot be empty";
+        String expectedMessage = "Cannot invoke action without element id or inovkedby";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
+    
+    
     @Test
-    public void testCreateNullActionElement() throws  Exception{
+    public void testCreateNullActionElement() throws Exception{
         // GIVEN server is running properly
         // AND I create user with invalid ActionElement Type  as 'null'
         // WHEN I POST /actions with a new message
         // THEN the server responds with expected exception
 
-
         Exception exception = assertThrows(RuntimeException.class, () -> {
             ActionBoundary messageToPost = new ActionBoundary();
-            HashMap testMap2=new HashMap<String,Object>();
-            messageToPost.setActionAttributes(testMap2);
-            testMap2.put("sdfsf","asdfasdf");
+            
+            HashMap<String, Object> testMap = new HashMap<String,Object>();
+            testMap.put("someKey","someValue");
+            messageToPost.setActionAttributes(testMap);
             messageToPost.setType("type1");
-
+            
 
             ElementBoundary responseFromServer =
                     this.restTemplate
@@ -93,30 +94,34 @@ public class ActionControllerTests {
                                     this.url + "/actions",
                                     messageToPost,
                                     ElementBoundary.class);
-
-
         });
 
-        String expectedMessage = "Action element Cannot be empty";
+        String expectedMessage = "Cannot invoke action without element id or inovkedby";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
+    
+    
     @Test
-    public void testCreateActionProperly() throws  Exception{
+    public void testCreateActionProperly() throws Exception {
             // GIVEN server is running properly
             // AND I create ActionBoundary object and assign attributes
             // WHEN I POST /actions with a new message 'messageToPost'
             // THEN the server responds with expected 'type' and 'actionAttributes'
 
             ActionBoundary messageToPost = new ActionBoundary();
-            HashMap testMap=new HashMap<String,Object>();
-            testMap.put("1","1");
-            HashMap testMap2=new HashMap<String,Object>();
-            messageToPost.setActionAttributes(testMap2);
-            testMap2.put("sdfsf","asdfasdf");
-            messageToPost.setElement(testMap);
-            messageToPost.setInvokedBy(testMap);
+            
+            HashMap<String, Object> AttributestMap=new HashMap<String,Object>();
+            AttributestMap.put("1","1");
+            HashMap<String, String> elementMap=new HashMap<String,String>();
+            elementMap.put("elementId","12");
+            HashMap<String, String> invokeBy=new HashMap<String,String>();
+            invokeBy.put("email","guy@gmail.com");
+
+            messageToPost.setActionAttributes(AttributestMap);
+            messageToPost.setElement(elementMap);
+            messageToPost.setInvokedBy(invokeBy);
             messageToPost.setType("someType");
 
             ActionBoundary responseFromServer =
@@ -125,9 +130,10 @@ public class ActionControllerTests {
                                         this.url + "/actions",
                                         messageToPost,
                                         ActionBoundary.class);
+            
         assertThat(responseFromServer)
                 .isEqualToComparingOnlyGivenFields(messageToPost,
                         "type","actionAttributes");
-
     }
+    
 }

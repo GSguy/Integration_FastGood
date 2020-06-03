@@ -28,13 +28,21 @@ public class UserEntityConverter {
 		else
 			entity.setEmail(null);
 		
-		UserRole role = null;
+		if (user.getRole() != null)
+			entity.setRole(UserRole.valueOf(user.getRole().name().toUpperCase()));
+		else
+			entity.setRole(null);
 		
-		entity.setRole(UserRole.valueOf(user.getRole().name().toUpperCase()));
-		entity.setAvatar(user.getAvatar());
-		entity.setUsername(user.getUsername());
+		if (user.getAvatar() != null)
+			entity.setAvatar(user.getAvatar());
+		else
+			entity.setAvatar(null);
+		
+		if (user.getUsername() != null)
+			entity.setUsername(user.getUsername());
+		else
+			entity.setUsername(null);
 
-		
 		return entity;
 	}
 	

@@ -58,7 +58,6 @@ public class UserControllerTests {
                                 this.url + uri,
                                 messageToPost,
                                 UserBoundary.class);
-
         return messageToServer;
     }
     
@@ -125,15 +124,12 @@ public class UserControllerTests {
 
             UserBoundary  messageToPost =createPostMessageAndReturningTheMessage("users",user);
 
-
             UserBoundary messageToServer =
                     this.restTemplate
                             .postForObject(
                                     this.url + "users",
                                     messageToPost,
                                     UserBoundary.class);
-
-
         });
 
         String expectedMessage = "User Email is not valid";
@@ -155,6 +151,7 @@ public class UserControllerTests {
             user.setEmail("omerlewitz@gmail.com");
             user.setAvatar("someAvatar");
             user.setUsername("omer");
+            user.setRole(null);
 
             UserBoundary  messageToPost = createPostMessageAndReturningTheMessage("users", user);
 
@@ -166,7 +163,7 @@ public class UserControllerTests {
                                     UserBoundary.class);
         });
 
-        String expectedMessage = "User Role cannot be null";
+        String expectedMessage = "User Role Cannot be null";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));

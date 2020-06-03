@@ -45,6 +45,7 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 		this.elementEntityConverter = elementEntityConverter;
 	}
 
+	
 	@Override
 	@Transactional // (readOnly = false)
 	public ElementBoundary create(String managerEmail, ElementBoundary newElement) {
@@ -54,6 +55,7 @@ public class ElementServiceWithDB implements ElementServiceRelational {
 		}
 
 		newElement.getCreatedBy().put("email", managerEmail);
+		
 		ElementEntity entity = this.elementEntityConverter.toEntity(newElement);
 
 		// create new tupple in the idValue table with a non-used id
