@@ -47,7 +47,7 @@ public class ElementControllerTests {
 //	}
 
 
-	@Test
+	//@Test
 	public void testPostMessageReturnsMessageDetailsInResponse() throws Exception {
 		// GIVEN server is run properly
 		// WHEN I POST /elements/omer@gmail.com with a new message
@@ -74,7 +74,7 @@ public class ElementControllerTests {
 	}
 
 	
-	@Test
+	//@Test
 	public void testGetAllElementsOnServerInitReturnsEmptyArray() throws Exception {
 
 		// GIVEN server is run properly
@@ -93,7 +93,7 @@ public class ElementControllerTests {
 	}
 
 	
-	@Test
+	//@Test
 	public void testGetElementsWithEmailAndId() throws Exception {
 		// GIVEN server is run properly
 		// WHEN I POST /elements/omer@gmail.com with a new message
@@ -118,7 +118,7 @@ public class ElementControllerTests {
 	}
 
 	
-	@Test
+	//@Test
 	public void testUpdatingElementsWithEmailAndIdy() throws Exception {
 
 		// GIVEN server is up
