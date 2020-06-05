@@ -1,14 +1,15 @@
 # FastGood
 
 ## About:
-The project name is “FastGood”.
+The project name is *“FastGood”*.
 FastGood is mapping fast food restaurants, on Google map.
 Our vision is - to make it easy for people to find their favorite junk food restaurant as quickly and easily as possible.
 
-This project was developed in JAVA programming language.
+This project was developed in *JAVA* programming language.
 
-In the database we used postgreSQL.
-In creating the UI we used a Flutter environment with a Dart programming language.
+In the *Database* we used *PostgreSQL*.
+
+In creating the *UI* we used a *Flutter* environment with a *Dart* programming language.
 
 
 ## Required technologies:
