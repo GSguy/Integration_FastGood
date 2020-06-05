@@ -29,3 +29,4 @@ In creating the UI we used a Flutter environment with a Dart programming languag
 ## Testing:
 In the src folder, there are automated tests with JUnit.
 ### Example
+![](JUnit_tests_pictures/JUnit_tests_pic.png)
