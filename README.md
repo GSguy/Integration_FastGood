@@ -8,7 +8,7 @@ Our vision is - to make it easy for people to find their favorite junk food rest
 This project was developed in JAVA programming language.
 
 ## API:
-![alt text](https://github.com/AmirAtias/2020b.oshri.mahlev/blob/Add_API_pictures/API_1.png?raw=true)
+![](API_pictures/API_1.png) 
 
 ## Testing:
 In the src folder, there are automated tests with JUnit.
