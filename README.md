@@ -1,4 +1,4 @@
-# 2020b.oshri.mahlev
+# FastGood
 
 ## About:
 The project name is “FastGood”.
