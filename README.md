@@ -7,6 +7,10 @@ Our vision is - to make it easy for people to find their favorite junk food rest
 
 This project was developed in JAVA programming language.
 
+In the database we used postgreSQL.
+In creating the UI we used a Flutter environment with a Dart programming language.
+
+
 ## Required technologies:
 * JAVA 1.8
 * Maven 4.0.0
@@ -20,6 +24,7 @@ This project was developed in JAVA programming language.
 ![](API_pictures/API_2.png)
 ![](API_pictures/API_3.png)
 ![](API_pictures/API_4.png)
+
 
 ## Testing:
 In the src folder, there are automated tests with JUnit.
